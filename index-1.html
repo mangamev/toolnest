@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5J4F47ZVP3');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online tools - Word counter, password generator, QR code generator, JSON formatter, Base64 encoder, color picker, age calculator and more. No signup required.">
+  <meta name="keywords" content="free online tools, word counter, password generator, QR code generator, JSON formatter, base64 encoder, color picker, age calculator">
+  <title>ToolNest – Free Online Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #181b23;
+      --surface2: #1f2330;
+      --border: #2a2f3e;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --text: #e8eaf0;
+      --muted: #7a7f96;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      background: rgba(15,17,23,0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo span { color: var(--accent); }
+    .tagline { font-size: 0.8rem; color: var(--muted); }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 480px; margin: 0 auto; }
+
+    /* TOOLS GRID */
+    .tools-section { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    /* TOOL CARD */
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .tool-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .tool-header {
+      padding: 20px 20px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tool-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .tool-header h2 { font-size: 1rem; font-weight: 600; }
+    .tool-header p { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .tool-body { padding: 0 20px 20px; }
+
+    /* INPUTS */
+    textarea, input[type="text"], input[type="number"], input[type="date"], select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+    textarea { min-height: 90px; }
+
+    .row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .row > * { flex: 1; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.83rem;
+      font-weight: 500;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-success { background: var(--accent2); color: #0f1117; }
+    .btn:hover { opacity: 0.88; }
+
+    .btn-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+
+    /* OUTPUT */
+    .output {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      min-height: 40px;
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 8px;
+      color: var(--accent2);
+      font-family: 'Courier New', monospace;
+    }
+    .stat-row {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;
+    }
+    .stat {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      flex: 1; min-width: 80px; text-align: center;
+    }
+    .stat strong { display: block; font-size: 1.3rem; color: var(--accent); font-family: 'Space Grotesk', sans-serif; }
+
+    /* COLOR TOOL */
+    #colorPreview {
+      width: 100%; height: 60px; border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      transition: background 0.2s;
+    }
+    input[type="color"] {
+      width: 100%; height: 44px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    /* QR */
+    #qrOutput { text-align: center; margin-top: 8px; }
+    #qrOutput canvas, #qrOutput img { border-radius: 8px; max-width: 100%; }
+
+    /* JSON */
+    #jsonOutput {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      font-family: 'Courier New', monospace;
+      min-height: 80px;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 8px;
+      white-space: pre;
+      color: var(--accent2);
+    }
+
+    /* AGE */
+    .age-result { margin-top: 8px; }
+    .age-result .big { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: var(--accent); }
+    .age-result .sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 32px 24px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    footer a { color: var(--muted); text-decoration: underline; }
+
+    /* COPY TOAST */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--accent2); color: #0f1117;
+      padding: 10px 20px; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 600;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 999;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 32px; }
+      .tools-section { padding: 0 12px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="/">Tool<span>Nest</span></a>
+  <span class="tagline">Free · No signup · Instant</span>
+</header>
+
+<div class="hero">
+  <h1>Free Online Tools,<br><em>No Strings Attached</em></h1>
+  <p>10 essential utilities. Works in your browser. No signup, no ads-on-tools, no tracking.</p>
+</div>
+
+<div class="tools-section">
+  <div class="tools-grid">
+
+    <!-- 1. WORD COUNTER -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#6c63ff22;">📝</div>
+        <div><h2>Word Counter</h2><p>Count words, characters & sentences</p></div>
+      </div>
+      <div class="tool-body">
+        <textarea id="wcInput" placeholder="Paste or type your text here..." oninput="updateWordCount()"></textarea>
+        <div class="stat-row">
+          <div class="stat"><strong id="wcWords">0</strong>Words</div>
+          <div class="stat"><strong id="wcChars">0</strong>Chars</div>
+          <div class="stat"><strong id="wcSentences">0</strong>Sentences</div>
+          <div class="stat"><strong id="wcParagraphs">0</strong>Paragraphs</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="document.getElementById('wcInput').value='';updateWordCount()">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CASE CONVERTER -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#00d4aa22;">🔡</div>
+        <div><h2>Case Converter</h2><p>Transform text case instantly</p></div>
+      </div>
+      <div class="tool-body">
+        <textarea id="caseInput" placeholder="Enter your text..."></textarea>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="convertCase('upper')">UPPER</button>
+          <button class="btn btn-secondary" onclick="convertCase('lower')">lower</button>
+          <button class="btn btn-secondary" onclick="convertCase('title')">Title</button>
+          <button class="btn btn-secondary" onclick="convertCase('sentence')">Sentence</button>
+          <button class="btn btn-secondary" onclick="convertCase('camel')">camelCase</button>
+          <button class="btn btn-secondary" onclick="convertCase('snake')">snake_case</button>
+        </div>
+        <div class="output" id="caseOutput">Result appears here...</div>
+        <div class="btn-row">
+          <button class="btn btn-success" onclick="copyText('caseOutput')">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. PASSWORD GENERATOR -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#ff6b6b22;">🔑</div>
+        <div><h2>Password Generator</h2><p>Strong, secure random passwords</p></div>
+      </div>
+      <div class="tool-body">
+        <div class="row">
+          <div>
+            <label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:4px">Length</label>
+            <input type="number" id="pwLen" value="16" min="4" max="128">
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;font-size:0.83rem;">
+          <label><input type="checkbox" id="pwUpper" checked> Uppercase (A-Z)</label>
+          <label><input type="checkbox" id="pwLower" checked> Lowercase (a-z)</label>
+          <label><input type="checkbox" id="pwNum" checked> Numbers (0-9)</label>
+          <label><input type="checkbox" id="pwSym" checked> Symbols (!@#$...)</label>
+        </div>
+        <div class="output" id="pwOutput" style="letter-spacing:1px">Click Generate</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="generatePassword()">Generate</button>
+          <button class="btn btn-success" onclick="copyText('pwOutput')">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. BASE64 ENCODER/DECODER -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#ffd93d22;">⚙️</div>
+        <div><h2>Base64 Encoder</h2><p>Encode & decode Base64 strings</p></div>
+      </div>
+      <div class="tool-body">
+        <textarea id="b64Input" placeholder="Enter text to encode or Base64 to decode..."></textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="doBase64('encode')">Encode</button>
+          <button class="btn btn-secondary" onclick="doBase64('decode')">Decode</button>
+        </div>
+        <div class="output" id="b64Output">Result appears here...</div>
+        <div class="btn-row">
+          <button class="btn btn-success" onclick="copyText('b64Output')">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. JSON FORMATTER -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#a78bfa22;">{ }</div>
+        <div><h2>JSON Formatter</h2><p>Prettify & validate JSON</p></div>
+      </div>
+      <div class="tool-body">
+        <textarea id="jsonInput" placeholder='{"name":"value","arr":[1,2,3]}'></textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="formatJSON()">Format</button>
+          <button class="btn btn-secondary" onclick="minifyJSON()">Minify</button>
+          <button class="btn btn-success" onclick="copyText('jsonOutput')">Copy</button>
+        </div>
+        <div id="jsonOutput">Result appears here...</div>
+      </div>
+    </div>
+
+    <!-- 6. COLOR PICKER -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#f4722622;">🎨</div>
+        <div><h2>Color Picker</h2><p>HEX, RGB & HSL converter</p></div>
+      </div>
+      <div class="tool-body">
+        <div id="colorPreview" style="background:#6c63ff"></div>
+        <input type="color" id="colorPicker" value="#6c63ff" oninput="updateColor(this.value)">
+        <div class="stat-row" style="margin-top:8px">
+          <div class="stat" style="cursor:pointer" onclick="copyRaw(document.getElementById('colorHex').textContent)">
+            <strong id="colorHex" style="font-size:1rem">#6C63FF</strong>HEX
+          </div>
+          <div class="stat" style="cursor:pointer" onclick="copyRaw(document.getElementById('colorRgb').textContent)">
+            <strong id="colorRgb" style="font-size:0.85rem">108,99,255</strong>RGB
+          </div>
+          <div class="stat" style="cursor:pointer" onclick="copyRaw(document.getElementById('colorHsl').textContent)">
+            <strong id="colorHsl" style="font-size:0.85rem">244°,100%,70%</strong>HSL
+          </div>
+        </div>
+        <p style="font-size:0.72rem;color:var(--muted);margin-top:6px">Click any value to copy</p>
+      </div>
+    </div>
+
+    <!-- 7. QR CODE GENERATOR -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#00d4aa22;">▦</div>
+        <div><h2>QR Code Generator</h2><p>Generate QR codes instantly</p></div>
+      </div>
+      <div class="tool-body">
+        <input type="text" id="qrInput" placeholder="Enter URL or text..." oninput="generateQR()">
+        <div id="qrOutput"><p style="color:var(--muted);font-size:0.8rem;text-align:center;padding:16px 0">QR code appears here</p></div>
+        <div class="btn-row">
+          <button class="btn btn-success" onclick="downloadQR()">Download PNG</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. AGE CALCULATOR -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#6c63ff22;">🎂</div>
+        <div><h2>Age Calculator</h2><p>Calculate exact age from birthdate</p></div>
+      </div>
+      <div class="tool-body">
+        <label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:4px">Date of Birth</label>
+        <input type="date" id="ageInput" onchange="calcAge()">
+        <div class="age-result" id="ageResult"></div>
+      </div>
+    </div>
+
+    <!-- 9. RANDOM NUMBER GENERATOR -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#ffd93d22;">🎲</div>
+        <div><h2>Random Number</h2><p>Generate random numbers in range</p></div>
+      </div>
+      <div class="tool-body">
+        <div class="row">
+          <div>
+            <label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:4px">Min</label>
+            <input type="number" id="rngMin" value="1">
+          </div>
+          <div>
+            <label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:4px">Max</label>
+            <input type="number" id="rngMax" value="100">
+          </div>
+          <div>
+            <label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:4px">Count</label>
+            <input type="number" id="rngCount" value="1" min="1" max="100">
+          </div>
+        </div>
+        <div class="output" id="rngOutput" style="font-size:1.4rem;text-align:center;font-family:'Space Grotesk',sans-serif">—</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="generateRandom()">Generate</button>
+          <button class="btn btn-success" onclick="copyText('rngOutput')">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. URL ENCODER/DECODER -->
+    <div class="tool-card">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#ff6b6b22;">🔗</div>
+        <div><h2>URL Encoder</h2><p>Encode & decode URLs</p></div>
+      </div>
+      <div class="tool-body">
+        <textarea id="urlInput" placeholder="Enter URL or text to encode/decode..."></textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="doURL('encode')">Encode</button>
+          <button class="btn btn-secondary" onclick="doURL('decode')">Decode</button>
+        </div>
+        <div class="output" id="urlOutput">Result appears here...</div>
+        <div class="btn-row">
+          <button class="btn btn-success" onclick="copyText('urlOutput')">Copy</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 ToolNest · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a></p>
+  <p style="margin-top:6px">All tools run entirely in your browser. No data is sent to any server.</p>
+</footer>
+
+<div id="toast">Copied!</div>
+
+<!-- QR Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+// ─── WORD COUNTER ───
+function updateWordCount() {
+  const t = document.getElementById('wcInput').value;
+  const words = t.trim() === '' ? 0 : t.trim().split(/\s+/).length;
+  const chars = t.length;
+  const sentences = t.trim() === '' ? 0 : (t.match(/[.!?]+/g) || []).length;
+  const paragraphs = t.trim() === '' ? 0 : t.trim().split(/\n\s*\n/).length;
+  document.getElementById('wcWords').textContent = words;
+  document.getElementById('wcChars').textContent = chars;
+  document.getElementById('wcSentences').textContent = sentences;
+  document.getElementById('wcParagraphs').textContent = paragraphs;
+}
+
+// ─── CASE CONVERTER ───
+function convertCase(type) {
+  const t = document.getElementById('caseInput').value;
+  let result = '';
+  switch(type) {
+    case 'upper': result = t.toUpperCase(); break;
+    case 'lower': result = t.toLowerCase(); break;
+    case 'title': result = t.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()); break;
+    case 'sentence': result = t.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase()); break;
+    case 'camel': result = t.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (_, c) => c.toUpperCase()); break;
+    case 'snake': result = t.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, ''); break;
+  }
+  document.getElementById('caseOutput').textContent = result;
+}
+
+// ─── PASSWORD GENERATOR ───
+function generatePassword() {
+  const len = parseInt(document.getElementById('pwLen').value) || 16;
+  const upper = document.getElementById('pwUpper').checked ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' : '';
+  const lower = document.getElementById('pwLower').checked ? 'abcdefghijklmnopqrstuvwxyz' : '';
+  const nums  = document.getElementById('pwNum').checked  ? '0123456789' : '';
+  const syms  = document.getElementById('pwSym').checked  ? '!@#$%^&*()_+-=[]{}|;:,.<>?' : '';
+  const pool  = upper + lower + nums + syms;
+  if (!pool) { document.getElementById('pwOutput').textContent = 'Select at least one option'; return; }
+  let pw = '';
+  const arr = new Uint32Array(len);
+  crypto.getRandomValues(arr);
+  for (let i = 0; i < len; i++) pw += pool[arr[i] % pool.length];
+  document.getElementById('pwOutput').textContent = pw;
+}
+
+// ─── BASE64 ───
+function doBase64(mode) {
+  const t = document.getElementById('b64Input').value;
+  try {
+    const result = mode === 'encode' ? btoa(unescape(encodeURIComponent(t))) : decodeURIComponent(escape(atob(t)));
+    document.getElementById('b64Output').textContent = result;
+  } catch(e) {
+    document.getElementById('b64Output').textContent = 'Error: invalid input';
+  }
+}
+
+// ─── JSON FORMATTER ───
+function formatJSON() {
+  try {
+    const parsed = JSON.parse(document.getElementById('jsonInput').value);
+    document.getElementById('jsonOutput').textContent = JSON.stringify(parsed, null, 2);
+    document.getElementById('jsonOutput').style.color = 'var(--accent2)';
+  } catch(e) {
+    document.getElementById('jsonOutput').textContent = '✗ Invalid JSON: ' + e.message;
+    document.getElementById('jsonOutput').style.color = '#ff6b6b';
+  }
+}
+function minifyJSON() {
+  try {
+    const parsed = JSON.parse(document.getElementById('jsonInput').value);
+    document.getElementById('jsonOutput').textContent = JSON.stringify(parsed);
+    document.getElementById('jsonOutput').style.color = 'var(--accent2)';
+  } catch(e) {
+    document.getElementById('jsonOutput').textContent = '✗ Invalid JSON: ' + e.message;
+    document.getElementById('jsonOutput').style.color = '#ff6b6b';
+  }
+}
+
+// ─── COLOR PICKER ───
+function updateColor(hex) {
+  document.getElementById('colorPreview').style.background = hex;
+  document.getElementById('colorHex').textContent = hex.toUpperCase();
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  document.getElementById('colorRgb').textContent = `${r},${g},${b}`;
+  const rf=r/255,gf=g/255,bf=b/255;
+  const max=Math.max(rf,gf,bf),min=Math.min(rf,gf,bf);
+  let h,s,l=(max+min)/2;
+  if(max===min){h=s=0;}else{
+    const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min);
+    switch(max){case rf:h=((gf-bf)/d+(gf<bf?6:0))/6;break;case gf:h=((bf-rf)/d+2)/6;break;default:h=((rf-gf)/d+4)/6;}
+  }
+  document.getElementById('colorHsl').textContent = `${Math.round(h*360)}°,${Math.round(s*100)}%,${Math.round(l*100)}%`;
+}
+
+// ─── QR CODE ───
+let qrInstance = null;
+function generateQR() {
+  const val = document.getElementById('qrInput').value.trim();
+  const out = document.getElementById('qrOutput');
+  if (!val) { out.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;text-align:center;padding:16px 0">QR code appears here</p>'; qrInstance=null; return; }
+  out.innerHTML = '';
+  qrInstance = new QRCode(out, { text: val, width: 180, height: 180, colorDark: '#e8eaf0', colorLight: '#1f2330', correctLevel: QRCode.CorrectLevel.H });
+}
+function downloadQR() {
+  const canvas = document.querySelector('#qrOutput canvas');
+  if (!canvas) { showToast('Generate a QR code first'); return; }
+  const a = document.createElement('a'); a.download = 'qrcode.png'; a.href = canvas.toDataURL(); a.click();
+}
+
+// ─── AGE CALCULATOR ───
+function calcAge() {
+  const dob = new Date(document.getElementById('ageInput').value);
+  if (isNaN(dob)) return;
+  const now = new Date();
+  let years = now.getFullYear() - dob.getFullYear();
+  let months = now.getMonth() - dob.getMonth();
+  let days = now.getDate() - dob.getDate();
+  if (days < 0) { months--; const prev = new Date(now.getFullYear(), now.getMonth(), 0); days += prev.getDate(); }
+  if (months < 0) { years--; months += 12; }
+  const totalDays = Math.floor((now - dob) / 86400000);
+  document.getElementById('ageResult').innerHTML = `
+    <div class="big">${years} <span style="font-size:1rem;color:var(--muted)">years old</span></div>
+    <div class="sub">${months} months, ${days} days — ${totalDays.toLocaleString()} days total</div>
+  `;
+}
+
+// ─── RANDOM NUMBER ───
+function generateRandom() {
+  const min = parseInt(document.getElementById('rngMin').value);
+  const max = parseInt(document.getElementById('rngMax').value);
+  const count = Math.min(parseInt(document.getElementById('rngCount').value) || 1, 100);
+  if (min > max) { document.getElementById('rngOutput').textContent = 'Min must be ≤ Max'; return; }
+  const results = [];
+  for (let i = 0; i < count; i++) results.push(Math.floor(Math.random() * (max - min + 1)) + min);
+  document.getElementById('rngOutput').textContent = results.join(count > 1 ? ', ' : '');
+}
+
+// ─── URL ENCODER ───
+function doURL(mode) {
+  const t = document.getElementById('urlInput').value;
+  try {
+    document.getElementById('urlOutput').textContent = mode === 'encode' ? encodeURIComponent(t) : decodeURIComponent(t);
+  } catch(e) {
+    document.getElementById('urlOutput').textContent = 'Error: invalid input';
+  }
+}
+
+// ─── UTILS ───
+function copyText(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
+}
+function copyRaw(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+</script>
+</body>
+</html>
