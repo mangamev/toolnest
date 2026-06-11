@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free age calculator. Calculate your exact age in years, months, days from your date of birth.">
+  <title>Age Calculator – Calculate Exact Age | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Age Calculator</h1>
+  <p class="tool-desc">Calculate your exact age in years, months, days, and total days from your date of birth.</p>
+  <div class="card">
+    <label class="label">Date of Birth</label>
+    <input type="date" id="dob" onchange="calc()">
+    <div id="result" style="margin-top:20px"></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function calc(){
+  const dob=new Date(document.getElementById('dob').value);
+  if(isNaN(dob))return;
+  const now=new Date();
+  let y=now.getFullYear()-dob.getFullYear(),m=now.getMonth()-dob.getMonth(),d=now.getDate()-dob.getDate();
+  if(d<0){m--;const prev=new Date(now.getFullYear(),now.getMonth(),0);d+=prev.getDate();}
+  if(m<0){y--;m+=12;}
+  const totalDays=Math.floor((now-dob)/86400000);
+  const next=new Date(dob);next.setFullYear(now.getFullYear());if(next<now)next.setFullYear(now.getFullYear()+1);
+  const daysToNext=Math.floor((next-now)/86400000);
+  document.getElementById('result').innerHTML=`
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:700;color:var(--accent)">${y}</div>
+      <div style="color:var(--muted);font-size:0.9rem">years old</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><strong>${m}</strong>Months</div>
+      <div class="stat"><strong>${d}</strong>Days</div>
+      <div class="stat"><strong>${totalDays.toLocaleString()}</strong>Total Days</div>
+      <div class="stat"><strong>${daysToNext}</strong>Days to Birthday</div>
+    </div>`;
+}
+</script>
+</body></html>

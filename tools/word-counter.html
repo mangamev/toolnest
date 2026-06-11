@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online word counter. Count words, characters, sentences, and paragraphs instantly. No signup required.">
+  <title>Word Counter – Free Online Word Count Tool | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Word Counter</h1>
+  <p class="tool-desc">Count words, characters, sentences, and paragraphs in real time. Free and no signup required.</p>
+  <div class="card">
+    <label class="label">Enter or paste your text below</label>
+    <textarea id="input" placeholder="Start typing or paste your text here..." oninput="update()"></textarea>
+    <div class="stat-row">
+      <div class="stat"><strong id="words">0</strong>Words</div>
+      <div class="stat"><strong id="chars">0</strong>Characters</div>
+      <div class="stat"><strong id="charsNoSpace">0</strong>No Spaces</div>
+      <div class="stat"><strong id="sentences">0</strong>Sentences</div>
+      <div class="stat"><strong id="paragraphs">0</strong>Paragraphs</div>
+      <div class="stat"><strong id="readTime">0</strong>Min Read</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="document.getElementById('input').value='';update()">Clear</button>
+      <button class="btn btn-success" onclick="copyText('input')">Copy Text</button>
+    </div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function update() {
+  const t = document.getElementById('input').value;
+  const words = t.trim()===''?0:t.trim().split(/\s+/).length;
+  document.getElementById('words').textContent = words;
+  document.getElementById('chars').textContent = t.length;
+  document.getElementById('charsNoSpace').textContent = t.replace(/\s/g,'').length;
+  document.getElementById('sentences').textContent = t.trim()===''?0:(t.match(/[.!?]+/g)||[]).length;
+  document.getElementById('paragraphs').textContent = t.trim()===''?0:t.trim().split(/\n\s*\n/).length;
+  document.getElementById('readTime').textContent = Math.ceil(words/200);
+}
+</script>
+</body></html>

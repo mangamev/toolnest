@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online Base64 encoder and decoder. Encode text to Base64 or decode Base64 strings instantly. No signup required.">
+  <title>Base64 Encoder & Decoder – Free Online Tool | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Base64 Encoder & Decoder</h1>
+  <p class="tool-desc">Encode any text to Base64 or decode Base64 strings back to plain text. Works entirely in your browser.</p>
+  <div class="card">
+    <label class="label">Input</label>
+    <textarea id="input" placeholder="Enter text to encode, or Base64 to decode..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="process('encode')">Encode →</button>
+      <button class="btn btn-secondary" onclick="process('decode')">← Decode</button>
+    </div>
+    <label class="label">Output</label>
+    <div class="output" id="output">Result appears here...</div>
+    <div class="btn-row">
+      <button class="btn btn-success" onclick="copyRaw(document.getElementById('output').textContent)">Copy</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('output').textContent&&(document.getElementById('input').value=document.getElementById('output').textContent,document.getElementById('output').textContent='')">Swap ↕</button>
+    </div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function process(mode) {
+  const t = document.getElementById('input').value;
+  try {
+    document.getElementById('output').textContent = mode==='encode' ? btoa(unescape(encodeURIComponent(t))) : decodeURIComponent(escape(atob(t)));
+    document.getElementById('output').style.color='var(--accent2)';
+  } catch(e) {
+    document.getElementById('output').textContent='Error: invalid input for '+mode;
+    document.getElementById('output').style.color='#ff6b6b';
+  }
+}
+</script>
+</body></html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online hash generator. Generate MD5, SHA-1, SHA-256, SHA-512 hashes from any text instantly.">
+  <title>Hash Generator – MD5, SHA256, SHA512 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Hash Generator</h1>
+  <p class="tool-desc">Generate cryptographic hashes from any text. Supports SHA-1, SHA-256, and SHA-512 via the Web Crypto API.</p>
+  <div class="card">
+    <label class="label">Input Text</label>
+    <textarea id="input" placeholder="Enter text to hash..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="hashAll()">Generate All Hashes</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('input').value='';clearHashes()">Clear</button>
+    </div>
+    <label class="label" style="margin-top:16px">SHA-1</label>
+    <div class="output" id="sha1">—</div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('sha1').textContent)">Copy SHA-1</button></div>
+    <label class="label">SHA-256</label>
+    <div class="output" id="sha256">—</div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('sha256').textContent)">Copy SHA-256</button></div>
+    <label class="label">SHA-512</label>
+    <div class="output" id="sha512" style="font-size:0.75rem">—</div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('sha512').textContent)">Copy SHA-512</button></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+async function digest(algo, msg) {
+  const buf = await crypto.subtle.digest(algo, new TextEncoder().encode(msg));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function hashAll() {
+  const t = document.getElementById('input').value;
+  if(!t){clearHashes();return;}
+  document.getElementById('sha1').textContent = await digest('SHA-1',t);
+  document.getElementById('sha256').textContent = await digest('SHA-256',t);
+  document.getElementById('sha512').textContent = await digest('SHA-512',t);
+}
+function clearHashes(){['sha1','sha256','sha512'].forEach(id=>document.getElementById(id).textContent='—');}
+</script>
+</body></html>

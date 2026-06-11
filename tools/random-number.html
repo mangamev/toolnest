@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free random number generator. Generate random numbers in any range, single or multiple at once.">
+  <title>Random Number Generator – Free Online Tool | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Random Number Generator</h1>
+  <p class="tool-desc">Generate one or multiple random numbers in any range you specify.</p>
+  <div class="card">
+    <div class="row">
+      <div><label class="label">Min</label><input type="number" id="min" value="1"></div>
+      <div><label class="label">Max</label><input type="number" id="max" value="100"></div>
+      <div><label class="label">Count</label><input type="number" id="count" value="1" min="1" max="1000"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generate()">Generate</button>
+      <button class="btn btn-secondary" onclick="generate()">🔄 Regenerate</button>
+    </div>
+    <div class="output" id="output" style="font-size:2rem;text-align:center;font-family:'Space Grotesk',sans-serif;letter-spacing:2px">—</div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('output').textContent)">Copy</button></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function generate(){
+  const min=parseInt(document.getElementById('min').value),max=parseInt(document.getElementById('max').value),count=Math.min(parseInt(document.getElementById('count').value)||1,1000);
+  if(min>max){document.getElementById('output').textContent='Min must be ≤ Max';return;}
+  const results=Array.from({length:count},()=>Math.floor(Math.random()*(max-min+1))+min);
+  document.getElementById('output').textContent=results.join(count>1?', ':'');
+  document.getElementById('output').style.fontSize=count>5?'1rem':'2rem';
+}
+generate();
+</script>
+</body></html>

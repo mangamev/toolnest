@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online JSON formatter, prettifier, and validator. Format and minify JSON instantly. No signup required.">
+  <title>JSON Formatter & Validator – Free Online Tool | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">JSON Formatter & Validator</h1>
+  <p class="tool-desc">Prettify, minify, and validate JSON instantly. Paste your JSON and click Format to beautify it.</p>
+  <div class="card">
+    <label class="label">Input JSON</label>
+    <textarea id="input" placeholder='{"name":"value","array":[1,2,3]}' style="min-height:160px;font-family:Courier New,monospace"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="format()">Format / Prettify</button>
+      <button class="btn btn-secondary" onclick="minify()">Minify</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('input').value='';document.getElementById('output').textContent=''">Clear</button>
+    </div>
+    <label class="label">Output</label>
+    <div class="output" id="output" style="max-height:300px;overflow-y:auto;font-family:Courier New,monospace;font-size:0.82rem"></div>
+    <div class="btn-row">
+      <button class="btn btn-success" onclick="copyRaw(document.getElementById('output').textContent)">Copy</button>
+    </div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function format(){try{const p=JSON.parse(document.getElementById('input').value);document.getElementById('output').textContent=JSON.stringify(p,null,2);document.getElementById('output').style.color='var(--accent2)';}catch(e){document.getElementById('output').textContent='✗ '+e.message;document.getElementById('output').style.color='#ff6b6b';}}
+function minify(){try{const p=JSON.parse(document.getElementById('input').value);document.getElementById('output').textContent=JSON.stringify(p);document.getElementById('output').style.color='var(--accent2)';}catch(e){document.getElementById('output').textContent='✗ '+e.message;document.getElementById('output').style.color='#ff6b6b';}}
+</script>
+</body></html>

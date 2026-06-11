@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free QR code generator. Create QR codes from any URL or text and download as PNG instantly.">
+  <title>QR Code Generator – Free Online Tool | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">QR Code Generator</h1>
+  <p class="tool-desc">Generate QR codes from any URL or text instantly. Download as PNG for free.</p>
+  <div class="card">
+    <label class="label">Enter URL or Text</label>
+    <input type="text" id="input" placeholder="https://example.com" oninput="generate()">
+    <div id="qrWrap" style="text-align:center;margin-top:20px;min-height:60px">
+      <p style="color:var(--muted);font-size:0.85rem">Enter text above to generate QR code</p>
+    </div>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-success" onclick="download()">Download PNG</button>
+    </div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+let qr=null;
+function generate(){
+  const v=document.getElementById('input').value.trim();
+  const wrap=document.getElementById('qrWrap');
+  if(!v){wrap.innerHTML='<p style="color:var(--muted);font-size:0.85rem">Enter text above to generate QR code</p>';qr=null;return;}
+  wrap.innerHTML='';
+  qr=new QRCode(wrap,{text:v,width:200,height:200,colorDark:'#e8eaf0',colorLight:'#1f2330',correctLevel:QRCode.CorrectLevel.H});
+}
+function download(){
+  const canvas=document.querySelector('#qrWrap canvas');
+  if(!canvas){showToast('Generate a QR code first');return;}
+  const a=document.createElement('a');a.download='qrcode.png';a.href=canvas.toDataURL();a.click();
+}
+</script>
+</body></html>

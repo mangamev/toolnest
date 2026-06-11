@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free percentage calculator. Calculate percentages, percentage change, and what percentage one number is of another.">
+  <title>Percentage Calculator – Free Online Tool | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Percentage Calculator</h1>
+  <p class="tool-desc">Calculate percentages in three different ways. Enter values and get instant results.</p>
+  <div class="card">
+    <label class="label">What is X% of Y?</label>
+    <div class="row">
+      <input type="number" id="p1a" placeholder="X (%)" oninput="calc1()">
+      <input type="number" id="p1b" placeholder="Y" oninput="calc1()">
+    </div>
+    <div class="output" id="r1">—</div>
+  </div>
+  <div class="card">
+    <label class="label">X is what % of Y?</label>
+    <div class="row">
+      <input type="number" id="p2a" placeholder="X" oninput="calc2()">
+      <input type="number" id="p2b" placeholder="Y" oninput="calc2()">
+    </div>
+    <div class="output" id="r2">—</div>
+  </div>
+  <div class="card">
+    <label class="label">Percentage change from X to Y</label>
+    <div class="row">
+      <input type="number" id="p3a" placeholder="From (X)" oninput="calc3()">
+      <input type="number" id="p3b" placeholder="To (Y)" oninput="calc3()">
+    </div>
+    <div class="output" id="r3">—</div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function calc1(){const a=parseFloat(document.getElementById('p1a').value),b=parseFloat(document.getElementById('p1b').value);document.getElementById('r1').textContent=(!isNaN(a)&&!isNaN(b))?`${a}% of ${b} = ${(a/100*b).toFixed(4).replace(/\.?0+$/,'')} `:'—';}
+function calc2(){const a=parseFloat(document.getElementById('p2a').value),b=parseFloat(document.getElementById('p2b').value);document.getElementById('r2').textContent=(!isNaN(a)&&!isNaN(b)&&b!==0)?`${a} is ${(a/b*100).toFixed(4).replace(/\.?0+$/,'')}% of ${b}`:'—';}
+function calc3(){const a=parseFloat(document.getElementById('p3a').value),b=parseFloat(document.getElementById('p3b').value);if(!isNaN(a)&&!isNaN(b)&&a!==0){const c=(b-a)/Math.abs(a)*100;document.getElementById('r3').textContent=`${c>0?'+':''}${c.toFixed(2)}% ${c>0?'increase':'decrease'}`;}else document.getElementById('r3').textContent='—';}
+</script>
+</body></html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online text repeater. Repeat any text or string N times with custom separator.">
+  <title>Text Repeater – Repeat Text Online Free | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Text Repeater</h1>
+  <p class="tool-desc">Repeat any text or string a specified number of times with a custom separator.</p>
+  <div class="card">
+    <label class="label">Text to Repeat</label>
+    <textarea id="input" placeholder="Enter text to repeat..." style="min-height:80px"></textarea>
+    <div class="row" style="margin-top:12px">
+      <div>
+        <label class="label">Repeat Count</label>
+        <input type="number" id="count" value="5" min="1" max="10000">
+      </div>
+      <div>
+        <label class="label">Separator</label>
+        <input type="text" id="separator" placeholder="e.g. newline, comma, space" value="&#10;">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="repeat()">Repeat</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('separator').value='\n'">Newline</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('separator').value=', '">Comma</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('separator').value=' '">Space</button>
+    </div>
+    <label class="label">Output</label>
+    <div class="output" id="output" style="max-height:250px;overflow-y:auto">—</div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('output').textContent)">Copy</button></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function repeat(){const t=document.getElementById('input').value;const n=Math.min(parseInt(document.getElementById('count').value)||1,10000);const sep=document.getElementById('separator').value;document.getElementById('output').textContent=Array(n).fill(t).join(sep);}
+</script>
+</body></html>
