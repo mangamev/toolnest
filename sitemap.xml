@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 메인 -->
   <url><loc>https://quickfreetools.app/</loc><lastmod>2025-01-01</lastmod><priority>1.0</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/</loc><lastmod>2025-01-01</lastmod><priority>0.9</priority></url>
+
+  <!-- 영어 도구 -->
   <url><loc>https://quickfreetools.app/tools/word-counter.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
   <url><loc>https://quickfreetools.app/tools/case-converter.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
   <url><loc>https://quickfreetools.app/tools/text-repeater.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
@@ -20,6 +24,41 @@
   <url><loc>https://quickfreetools.app/tools/percentage-calculator.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
   <url><loc>https://quickfreetools.app/tools/aspect-ratio.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
   <url><loc>https://quickfreetools.app/tools/color-picker.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/text-diff.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/css-gradient.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/regex-tester.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/jwt-decoder.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/number-base.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/cron-parser.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/roman-numeral.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/char-frequency.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+
+  <!-- 한국어 도구 -->
+  <url><loc>https://quickfreetools.app/tools/ko/word-counter.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/case-converter.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/password-generator.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/base64.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/json-formatter.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/url-encoder.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/hash-generator.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/timestamp-converter.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/age-calculator.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/random-number.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/color-picker.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/qr-code.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/percentage-calculator.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/aspect-ratio.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/binary-converter.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/number-base.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/roman-numeral.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/text-diff.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/regex-tester.html</loc><lastmod>2025-01-01</lastmd><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/jwt-decoder.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/cron-parser.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/char-frequency.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/css-gradient.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
+
+  <!-- 공통 -->
   <url><loc>https://quickfreetools.app/about.html</loc><lastmod>2025-01-01</lastmod><priority>0.5</priority></url>
   <url><loc>https://quickfreetools.app/privacy.html</loc><lastmod>2025-01-01</lastmod><priority>0.3</priority></url>
   <url><loc>https://quickfreetools.app/terms.html</loc><lastmod>2025-01-01</lastmod><priority>0.3</priority></url>
