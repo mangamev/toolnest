@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free number base converter. Convert numbers between binary, octal, decimal, and hexadecimal instantly.">
+  <title>Number Base Converter – Binary, Octal, Hex | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Number Base Converter</h1>
+  <p class="tool-desc">Convert numbers between binary (base 2), octal (base 8), decimal (base 10), and hexadecimal (base 16).</p>
+  <div class="card">
+    <label class="label">Decimal (Base 10)</label>
+    <input type="number" id="dec" placeholder="e.g. 255" oninput="fromDec()">
+    <label class="label">Binary (Base 2)</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="bin" placeholder="e.g. 11111111" oninput="fromBin()" style="font-family:'Courier New',monospace">
+      <button class="btn btn-success" style="flex-shrink:0" onclick="copyRaw(document.getElementById('bin').value)">Copy</button>
+    </div>
+    <label class="label">Octal (Base 8)</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="oct" placeholder="e.g. 377" oninput="fromOct()" style="font-family:'Courier New',monospace">
+      <button class="btn btn-success" style="flex-shrink:0" onclick="copyRaw(document.getElementById('oct').value)">Copy</button>
+    </div>
+    <label class="label">Hexadecimal (Base 16)</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="hex" placeholder="e.g. FF" oninput="fromHex()" style="font-family:'Courier New',monospace">
+      <button class="btn btn-success" style="flex-shrink:0" onclick="copyRaw(document.getElementById('hex').value)">Copy</button>
+    </div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function set(dec){document.getElementById('bin').value=dec.toString(2);document.getElementById('oct').value=dec.toString(8);document.getElementById('hex').value=dec.toString(16).toUpperCase();}
+function fromDec(){const v=parseInt(document.getElementById('dec').value);if(!isNaN(v))set(v);}
+function fromBin(){const v=parseInt(document.getElementById('bin').value,2);if(!isNaN(v)){document.getElementById('dec').value=v;document.getElementById('oct').value=v.toString(8);document.getElementById('hex').value=v.toString(16).toUpperCase();}}
+function fromOct(){const v=parseInt(document.getElementById('oct').value,8);if(!isNaN(v)){document.getElementById('dec').value=v;document.getElementById('bin').value=v.toString(2);document.getElementById('hex').value=v.toString(16).toUpperCase();}}
+function fromHex(){const v=parseInt(document.getElementById('hex').value,16);if(!isNaN(v)){document.getElementById('dec').value=v;document.getElementById('bin').value=v.toString(2);document.getElementById('oct').value=v.toString(8);}}
+</script>
+</body></html>

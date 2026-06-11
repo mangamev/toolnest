@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online JWT decoder. Decode and inspect JSON Web Tokens instantly without sending data to any server.">
+  <title>JWT Decoder – Decode JSON Web Tokens Online | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">JWT Decoder</h1>
+  <p class="tool-desc">Decode and inspect JSON Web Tokens. Everything runs in your browser — your token is never sent anywhere.</p>
+  <div class="card">
+    <label class="label">JWT Token</label>
+    <textarea id="input" placeholder="Paste your JWT token here..." style="font-family:'Courier New',monospace;font-size:0.8rem" oninput="decode()"></textarea>
+    <label class="label" style="margin-top:16px">Header</label>
+    <div class="output" id="header" style="font-family:'Courier New',monospace;font-size:0.82rem">—</div>
+    <label class="label">Payload</label>
+    <div class="output" id="payload" style="font-family:'Courier New',monospace;font-size:0.82rem">—</div>
+    <label class="label">Signature</label>
+    <div class="output" id="sig" style="font-size:0.78rem;word-break:break-all">—</div>
+    <div id="exp" style="margin-top:12px;font-size:0.85rem;color:var(--muted)"></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+function decode(){
+  const t=document.getElementById('input').value.trim();
+  const parts=t.split('.');
+  if(parts.length!==3){['header','payload','sig'].forEach(id=>document.getElementById(id).textContent='—');return;}
+  try{
+    const h=JSON.parse(atob(parts[0].replace(/-/g,'+').replace(/_/g,'/')));
+    const p=JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+    document.getElementById('header').textContent=JSON.stringify(h,null,2);
+    document.getElementById('payload').textContent=JSON.stringify(p,null,2);
+    document.getElementById('sig').textContent=parts[2];
+    if(p.exp){const exp=new Date(p.exp*1000);const expired=exp<new Date();document.getElementById('exp').innerHTML=`<span style="color:${expired?'#ff6b6b':'#00d4aa'}">${expired?'⚠ Expired':'✓ Valid'}</span> — Expires: ${exp.toLocaleString()}`;}
+  }catch(e){document.getElementById('header').textContent='Invalid JWT token';}
+}
+</script>
+</body></html>
