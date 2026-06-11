@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 JSON 포맷터 및 유효성 검사기. JSON을 예쁘게 정리하거나 압축하세요.">
+  <meta name="keywords" content="JSON 포맷터, JSON 정리, JSON 유효성 검사, JSON 예쁘게, 무료 JSON">
+  <title>JSON 포맷터 – 무료 온라인 JSON 정리 도구 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/json-formatter.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">JSON 포맷터</h1>
+  <p class="tool-desc">JSON을 보기 좋게 정리하거나 압축합니다. 유효성 검사도 자동으로 수행됩니다.</p>
+  <div class="card">
+    <label class="label">JSON 입력</label>
+    <textarea id="input" placeholder='{"name":"값","배열":[1,2,3]}' style="min-height:160px;font-family:Courier New,monospace"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="format()">예쁘게 정리</button>
+      <button class="btn btn-secondary" onclick="minify()">압축</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('input').value='';document.getElementById('output').textContent=''">초기화</button>
+    </div>
+    <label class="label">결과</label>
+    <div class="output" id="output" style="max-height:300px;overflow-y:auto;font-family:Courier New,monospace;font-size:0.82rem"></div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('output').textContent)">복사</button></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function format(){try{const p=JSON.parse(document.getElementById('input').value);document.getElementById('output').textContent=JSON.stringify(p,null,2);document.getElementById('output').style.color='var(--accent2)';}catch(e){document.getElementById('output').textContent='✗ 오류: '+e.message;document.getElementById('output').style.color='#ff6b6b';}}
+function minify(){try{const p=JSON.parse(document.getElementById('input').value);document.getElementById('output').textContent=JSON.stringify(p);document.getElementById('output').style.color='var(--accent2)';}catch(e){document.getElementById('output').textContent='✗ 오류: '+e.message;document.getElementById('output').style.color='#ff6b6b';}}
+</script>
+</body></html>

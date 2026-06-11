@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 온라인 도구 모음. 글자수 세기, 비밀번호 생성기, QR코드 생성기, JSON 포맷터 등 27가지 도구를 무료로 사용하세요.">
+  <meta name="keywords" content="무료 온라인 도구, 글자수 세기, 비밀번호 생성기, QR코드 생성기, JSON 포맷터, 무료 툴">
+  <title>무료 온라인 도구 모음 – 회원가입 없이 무료 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <style>
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    .hero{text-align:center;padding:64px 24px 48px;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;line-height:1.15;margin-bottom:16px;}
+    .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hero p{color:var(--muted);font-size:1.05rem;max-width:480px;margin:0 auto 24px;}
+    .search-wrap{max-width:400px;margin:0 auto;position:relative;}
+    .search-wrap input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.9rem;padding:12px 16px 12px 40px;outline:none;transition:border-color 0.2s;}
+    .search-wrap input:focus{border-color:var(--accent);}
+    .search-wrap::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:0.9rem;}
+    .tools-section{max-width:1100px;margin:0 auto;padding:0 24px 80px;}
+    .category{margin-bottom:40px;}
+    .category-title{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+    .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+    .tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;text-decoration:none;display:flex;align-items:center;gap:14px;transition:border-color 0.2s,transform 0.15s;}
+    .tool-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+    .tool-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .tool-card h2{font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:3px;}
+    .tool-card p{font-size:0.78rem;color:var(--muted);}
+    .tool-card.hidden{display:none;}
+    footer{border-top:1px solid var(--border);text-align:center;padding:32px 24px;color:var(--muted);font-size:0.8rem;}
+    footer a{color:var(--muted);}
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">English</a><a href="/about.html">소개</a></nav></header>
+
+<div class="hero">
+  <h1>무료 온라인 도구,<br><em>회원가입 없이</em></h1>
+  <p>27가지 브라우저 기반 도구. 가입 불필요, 데이터 저장 없음, 완전 무료.</p>
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="도구 검색..." oninput="filterTools()">
+  </div>
+</div>
+
+<div class="tools-section">
+  <div class="category">
+    <div class="category-title">✏️ 텍스트 도구</div>
+    <div class="tools-grid">
+      <a class="tool-card" href="/tools/ko/word-counter.html" data-name="글자수 세기 단어수 문자수">
+        <div class="tool-icon" style="background:#6c63ff22">📝</div>
+        <div><h2>글자수 세기</h2><p>단어, 글자, 문장, 문단 수 카운트</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/case-converter.html" data-name="대소문자 변환 camelCase snake_case">
+        <div class="tool-icon" style="background:#00d4aa22">🔡</div>
+        <div><h2>대소문자 변환기</h2><p>대문자, 소문자, camelCase 등 변환</p></div>
+      </a>
+      <a class="tool-card" href="/tools/text-repeater.html" data-name="텍스트 반복 복사">
+        <div class="tool-icon" style="background:#ffd93d22">🔁</div>
+        <div><h2>텍스트 반복기</h2><p>텍스트를 N번 반복</p></div>
+      </a>
+      <a class="tool-card" href="/tools/lorem-ipsum.html" data-name="로렘 더미 텍스트 생성">
+        <div class="tool-icon" style="background:#a78bfa22">📄</div>
+        <div><h2>Lorem Ipsum 생성기</h2><p>더미 텍스트 생성</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/text-diff.html" data-name="텍스트 비교 차이 찾기">
+        <div class="tool-icon" style="background:#00d4aa22">🔍</div>
+        <div><h2>텍스트 비교기</h2><p>두 텍스트 차이 비교</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/char-frequency.html" data-name="문자 빈도 분석">
+        <div class="tool-icon" style="background:#a78bfa22">📊</div>
+        <div><h2>문자 빈도 분석기</h2><p>문자 출현 빈도 분석</p></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-title">⚙️ 개발자 도구</div>
+    <div class="tools-grid">
+      <a class="tool-card" href="/tools/ko/base64.html" data-name="Base64 인코더 디코더">
+        <div class="tool-icon" style="background:#ffd93d22">⚙️</div>
+        <div><h2>Base64 인코더</h2><p>Base64 인코딩/디코딩</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/json-formatter.html" data-name="JSON 포맷터 정리">
+        <div class="tool-icon" style="background:#a78bfa22">{ }</div>
+        <div><h2>JSON 포맷터</h2><p>JSON 정리 및 유효성 검사</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/url-encoder.html" data-name="URL 인코더 디코더">
+        <div class="tool-icon" style="background:#ff6b6b22">🔗</div>
+        <div><h2>URL 인코더</h2><p>URL 인코딩/디코딩</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/hash-generator.html" data-name="해시 생성기 SHA256">
+        <div class="tool-icon" style="background:#6c63ff22">#</div>
+        <div><h2>해시 생성기</h2><p>SHA-1, SHA-256, SHA-512</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/timestamp-converter.html" data-name="타임스탬프 변환기 유닉스">
+        <div class="tool-icon" style="background:#00d4aa22">🕐</div>
+        <div><h2>타임스탬프 변환기</h2><p>Unix 타임스탬프 ↔ 날짜</p></div>
+      </a>
+      <a class="tool-card" href="/tools/html-entities.html" data-name="HTML 엔티티 인코더">
+        <div class="tool-icon" style="background:#ffd93d22">&lt;&gt;</div>
+        <div><h2>HTML 엔티티</h2><p>HTML 특수문자 인코딩</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/binary-converter.html" data-name="2진수 이진수 변환기">
+        <div class="tool-icon" style="background:#ff6b6b22">01</div>
+        <div><h2>2진수 변환기</h2><p>텍스트 ↔ 이진수 변환</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/number-base.html" data-name="진법 변환기 16진수 8진수">
+        <div class="tool-icon" style="background:#6c63ff22">⬡</div>
+        <div><h2>진법 변환기</h2><p>2진수, 8진수, 16진수 변환</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/jwt-decoder.html" data-name="JWT 디코더 토큰">
+        <div class="tool-icon" style="background:#ffd93d22">🔐</div>
+        <div><h2>JWT 디코더</h2><p>JSON Web Token 분석</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/regex-tester.html" data-name="정규식 테스터 정규표현식">
+        <div class="tool-icon" style="background:#ff6b6b22">.*</div>
+        <div><h2>정규식 테스터</h2><p>정규표현식 실시간 테스트</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/cron-parser.html" data-name="cron 파서 스케줄">
+        <div class="tool-icon" style="background:#00d4aa22">⏰</div>
+        <div><h2>Cron 파서</h2><p>cron 표현식 해석</p></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-title">🎲 생성기</div>
+    <div class="tools-grid">
+      <a class="tool-card" href="/tools/ko/password-generator.html" data-name="비밀번호 생성기 랜덤">
+        <div class="tool-icon" style="background:#ff6b6b22">🔑</div>
+        <div><h2>비밀번호 생성기</h2><p>강력한 랜덤 비밀번호 생성</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/qr-code.html" data-name="QR코드 생성기 만들기">
+        <div class="tool-icon" style="background:#00d4aa22">▦</div>
+        <div><h2>QR 코드 생성기</h2><p>QR 코드 생성 및 다운로드</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/random-number.html" data-name="랜덤 숫자 생성기 무작위">
+        <div class="tool-icon" style="background:#ffd93d22">🎲</div>
+        <div><h2>랜덤 숫자 생성기</h2><p>범위 내 랜덤 숫자 생성</p></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-title">🧮 계산기</div>
+    <div class="tools-grid">
+      <a class="tool-card" href="/tools/ko/age-calculator.html" data-name="나이 계산기 만나이">
+        <div class="tool-icon" style="background:#6c63ff22">🎂</div>
+        <div><h2>나이 계산기</h2><p>만 나이 정확히 계산</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/percentage-calculator.html" data-name="퍼센트 계산기 백분율">
+        <div class="tool-icon" style="background:#a78bfa22">%</div>
+        <div><h2>퍼센트 계산기</h2><p>백분율 계산</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/aspect-ratio.html" data-name="화면 비율 계산기 해상도">
+        <div class="tool-icon" style="background:#00d4aa22">⬜</div>
+        <div><h2>화면 비율 계산기</h2><p>가로세로 비율 계산</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/roman-numeral.html" data-name="로마 숫자 변환기">
+        <div class="tool-icon" style="background:#ff6b6b22">Ⅻ</div>
+        <div><h2>로마 숫자 변환기</h2><p>아라비아 ↔ 로마 숫자</p></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-title">🎨 디자인 도구</div>
+    <div class="tools-grid">
+      <a class="tool-card" href="/tools/ko/color-picker.html" data-name="색상 피커 HEX RGB 변환">
+        <div class="tool-icon" style="background:#f4722622">🎨</div>
+        <div><h2>색상 피커</h2><p>HEX, RGB, HSL 변환</p></div>
+      </a>
+      <a class="tool-card" href="/tools/ko/css-gradient.html" data-name="CSS 그라디언트 생성기">
+        <div class="tool-icon" style="background:#6c63ff22">🌈</div>
+        <div><h2>CSS 그라디언트</h2><p>그라디언트 CSS 코드 생성</p></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 QuickFreeTools · <a href="/about.html">소개</a> · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p>
+  <p style="margin-top:6px">모든 도구는 브라우저에서 실행됩니다. 어떤 데이터도 서버로 전송되지 않습니다.</p>
+</footer>
+<script>
+function filterTools(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.tool-card').forEach(card=>{
+    const name=(card.dataset.name||'')+card.innerText.toLowerCase();
+    card.classList.toggle('hidden',q&&!name.includes(q));
+  });
+  document.querySelectorAll('.category').forEach(cat=>{
+    const visible=[...cat.querySelectorAll('.tool-card')].some(c=>!c.classList.contains('hidden'));
+    cat.style.display=(q&&!visible)?'none':'';
+  });
+}
+</script>
+</body></html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 cron 표현식 파서. cron 스케줄을 한국어로 쉽게 설명해드립니다.">
+  <title>Cron 표현식 파서 – cron 스케줄 분석 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/cron-parser.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">Cron 표현식 파서</h1>
+  <p class="tool-desc">cron 표현식을 입력하면 스케줄을 알기 쉽게 설명해드립니다. (분 시 일 월 요일)</p>
+  <div class="card">
+    <label class="label">Cron 표현식 (5개 필드: 분 시 일 월 요일)</label>
+    <input type="text" id="input" placeholder="예: 0 9 * * 1-5" oninput="parse()" style="font-family:'Courier New',monospace;font-size:1rem">
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="setEx('* * * * *')">매 분</button>
+      <button class="btn btn-secondary" onclick="setEx('0 * * * *')">매 시간</button>
+      <button class="btn btn-secondary" onclick="setEx('0 9 * * 1-5')">평일 오전 9시</button>
+      <button class="btn btn-secondary" onclick="setEx('0 0 * * 0')">매주 일요일</button>
+      <button class="btn btn-secondary" onclick="setEx('0 0 1 * *')">매월 1일</button>
+    </div>
+    <div class="output" id="output" style="color:var(--text);font-size:1rem;margin-top:12px">cron 표현식을 입력하세요</div>
+    <div style="margin-top:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px" id="fields"></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function setEx(v){document.getElementById('input').value=v;parse();}
+const days=['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+const months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+function desc(v,type){
+  if(v==='*')return`매 ${type}`;
+  if(v.includes('/'))return`${v.split('/')[1]}${type}마다`;
+  if(v.includes('-'))return`${type} ${v}`;
+  if(type==='요일'&&!isNaN(v))return days[parseInt(v)]||v;
+  if(type==='월'&&!isNaN(v))return months[parseInt(v)-1]||v;
+  return`${type} ${v}`;
+}
+function parse(){
+  const parts=document.getElementById('input').value.trim().split(/\s+/);
+  if(parts.length!==5){document.getElementById('output').textContent='정확히 5개 필드를 입력하세요: 분 시 일 월 요일';document.getElementById('fields').innerHTML='';return;}
+  const [min,hr,day,mon,wd]=parts;
+  const names=['분','시','일','월','요일'];
+  document.getElementById('fields').innerHTML=parts.map((v,i)=>`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-family:'Courier New',monospace;font-size:1.1rem;color:var(--accent);font-weight:700">${v}</div><div style="font-size:0.72rem;color:var(--muted);margin-top:4px">${names[i]}</div></div>`).join('');
+  document.getElementById('output').textContent=`${desc(min,'분')} ${desc(hr,'시')}에, ${desc(day,'일')} ${desc(mon,'월')}, ${desc(wd,'요일')} 실행`;
+}
+</script>
+</body></html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 글자수 세기 도구. 단어 수, 글자 수, 문장 수, 문단 수를 실시간으로 확인하세요. 회원가입 불필요.">
+  <meta name="keywords" content="글자수 세기, 단어 수 세기, 글자수 확인, 무료 글자수, 문자수 세기">
+  <title>글자수 세기 – 무료 온라인 단어 카운터 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/word-counter.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">글자수 세기</h1>
+  <p class="tool-desc">텍스트의 단어 수, 글자 수, 문장 수, 문단 수를 실시간으로 확인합니다. 회원가입 없이 무료로 사용하세요.</p>
+  <div class="card">
+    <label class="label">텍스트를 입력하거나 붙여넣으세요</label>
+    <textarea id="input" placeholder="여기에 텍스트를 입력하세요..." oninput="update()"></textarea>
+    <div class="stat-row">
+      <div class="stat"><strong id="words">0</strong>단어</div>
+      <div class="stat"><strong id="chars">0</strong>글자</div>
+      <div class="stat"><strong id="charsNoSpace">0</strong>공백 제외</div>
+      <div class="stat"><strong id="sentences">0</strong>문장</div>
+      <div class="stat"><strong id="paragraphs">0</strong>문단</div>
+      <div class="stat"><strong id="readTime">0</strong>분 읽기</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="document.getElementById('input').value='';update()">초기화</button>
+      <button class="btn btn-success" onclick="copyText('input')">텍스트 복사</button>
+    </div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function update() {
+  const t = document.getElementById('input').value;
+  const words = t.trim()===''?0:t.trim().split(/\s+/).length;
+  document.getElementById('words').textContent = words;
+  document.getElementById('chars').textContent = t.length;
+  document.getElementById('charsNoSpace').textContent = t.replace(/\s/g,'').length;
+  document.getElementById('sentences').textContent = t.trim()===''?0:(t.match(/[.!?。]+/g)||[]).length;
+  document.getElementById('paragraphs').textContent = t.trim()===''?0:t.trim().split(/\n\s*\n/).length;
+  document.getElementById('readTime').textContent = Math.ceil(words/200);
+}
+</script>
+</body></html>

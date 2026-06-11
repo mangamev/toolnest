@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 진법 변환기. 2진수, 8진수, 10진수, 16진수를 즉시 변환하세요.">
+  <meta name="keywords" content="진법 변환기, 2진수 변환, 16진수 변환, 8진수 변환, 십진수 변환">
+  <title>진법 변환기 – 2진수 8진수 16진수 변환 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/number-base.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">진법 변환기</h1>
+  <p class="tool-desc">2진수, 8진수, 10진수, 16진수를 서로 변환합니다. 어느 칸에서든 입력하면 즉시 변환됩니다.</p>
+  <div class="card">
+    <label class="label">10진수 (Decimal)</label>
+    <input type="number" id="dec" placeholder="예: 255" oninput="fromDec()">
+    <label class="label">2진수 (Binary)</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="bin" placeholder="예: 11111111" oninput="fromBin()" style="font-family:'Courier New',monospace">
+      <button class="btn btn-success" style="flex-shrink:0" onclick="copyRaw(document.getElementById('bin').value)">복사</button>
+    </div>
+    <label class="label">8진수 (Octal)</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="oct" placeholder="예: 377" oninput="fromOct()" style="font-family:'Courier New',monospace">
+      <button class="btn btn-success" style="flex-shrink:0" onclick="copyRaw(document.getElementById('oct').value)">복사</button>
+    </div>
+    <label class="label">16진수 (Hexadecimal)</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="hex" placeholder="예: FF" oninput="fromHex()" style="font-family:'Courier New',monospace">
+      <button class="btn btn-success" style="flex-shrink:0" onclick="copyRaw(document.getElementById('hex').value)">복사</button>
+    </div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function set(dec){document.getElementById('bin').value=dec.toString(2);document.getElementById('oct').value=dec.toString(8);document.getElementById('hex').value=dec.toString(16).toUpperCase();}
+function fromDec(){const v=parseInt(document.getElementById('dec').value);if(!isNaN(v))set(v);}
+function fromBin(){const v=parseInt(document.getElementById('bin').value,2);if(!isNaN(v)){document.getElementById('dec').value=v;document.getElementById('oct').value=v.toString(8);document.getElementById('hex').value=v.toString(16).toUpperCase();}}
+function fromOct(){const v=parseInt(document.getElementById('oct').value,8);if(!isNaN(v)){document.getElementById('dec').value=v;document.getElementById('bin').value=v.toString(2);document.getElementById('hex').value=v.toString(16).toUpperCase();}}
+function fromHex(){const v=parseInt(document.getElementById('hex').value,16);if(!isNaN(v)){document.getElementById('dec').value=v;document.getElementById('bin').value=v.toString(2);document.getElementById('oct').value=v.toString(8);}}
+</script>
+</body></html>

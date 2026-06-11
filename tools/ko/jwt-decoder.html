@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 JWT 디코더. JSON Web Token을 브라우저에서 즉시 디코딩하고 내용을 확인하세요.">
+  <title>JWT 디코더 – JSON Web Token 분석 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/jwt-decoder.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">JWT 디코더</h1>
+  <p class="tool-desc">JWT 토큰을 붙여넣으면 헤더, 페이로드, 서명을 분석합니다. 모든 처리는 브라우저에서 이루어집니다.</p>
+  <div class="card">
+    <label class="label">JWT 토큰</label>
+    <textarea id="input" placeholder="JWT 토큰을 붙여넣으세요..." style="font-family:'Courier New',monospace;font-size:0.8rem" oninput="decode()"></textarea>
+    <label class="label" style="margin-top:16px">헤더 (Header)</label>
+    <div class="output" id="header" style="font-family:'Courier New',monospace;font-size:0.82rem">—</div>
+    <label class="label">페이로드 (Payload)</label>
+    <div class="output" id="payload" style="font-family:'Courier New',monospace;font-size:0.82rem">—</div>
+    <label class="label">서명 (Signature)</label>
+    <div class="output" id="sig" style="font-size:0.78rem;word-break:break-all">—</div>
+    <div id="exp" style="margin-top:12px;font-size:0.85rem;color:var(--muted)"></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function decode(){
+  const t=document.getElementById('input').value.trim();
+  const parts=t.split('.');
+  if(parts.length!==3){['header','payload','sig'].forEach(id=>document.getElementById(id).textContent='—');return;}
+  try{
+    const h=JSON.parse(atob(parts[0].replace(/-/g,'+').replace(/_/g,'/')));
+    const p=JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+    document.getElementById('header').textContent=JSON.stringify(h,null,2);
+    document.getElementById('payload').textContent=JSON.stringify(p,null,2);
+    document.getElementById('sig').textContent=parts[2];
+    if(p.exp){const exp=new Date(p.exp*1000);const expired=exp<new Date();document.getElementById('exp').innerHTML=`<span style="color:${expired?'#ff6b6b':'#00d4aa'}">${expired?'⚠ 만료됨':'✓ 유효함'}</span> — 만료 시간: ${exp.toLocaleString('ko-KR')}`;}
+  }catch(e){document.getElementById('header').textContent='잘못된 JWT 토큰입니다';}
+}
+</script>
+</body></html>

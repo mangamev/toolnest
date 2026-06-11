@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 URL 인코더/디코더. URL 특수문자를 인코딩하거나 퍼센트 인코딩된 URL을 디코딩하세요.">
+  <title>URL 인코더 디코더 – 무료 온라인 도구 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/url-encoder.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">URL 인코더 / 디코더</h1>
+  <p class="tool-desc">URL의 특수문자를 인코딩하거나 퍼센트 인코딩된 URL을 원래 텍스트로 디코딩합니다.</p>
+  <div class="card">
+    <label class="label">입력</label>
+    <textarea id="input" placeholder="인코딩/디코딩할 URL 또는 텍스트를 입력하세요..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="process('encode')">인코딩 →</button>
+      <button class="btn btn-secondary" onclick="process('decode')">← 디코딩</button>
+    </div>
+    <label class="label">결과</label>
+    <div class="output" id="output">결과가 여기에 표시됩니다...</div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('output').textContent)">복사</button></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function process(mode){try{document.getElementById('output').textContent=mode==='encode'?encodeURIComponent(document.getElementById('input').value):decodeURIComponent(document.getElementById('input').value);document.getElementById('output').style.color='var(--accent2)';}catch(e){document.getElementById('output').textContent='오류: '+e.message;document.getElementById('output').style.color='#ff6b6b';}}
+</script>
+</body></html>

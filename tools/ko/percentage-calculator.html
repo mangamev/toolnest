@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 퍼센트 계산기. 백분율 계산, 증감률 계산을 즉시 처리합니다.">
+  <meta name="keywords" content="퍼센트 계산기, 백분율 계산기, 증감률 계산, 무료 퍼센트">
+  <title>퍼센트 계산기 – 무료 온라인 백분율 계산 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/percentage-calculator.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">퍼센트 계산기</h1>
+  <p class="tool-desc">세 가지 방식으로 퍼센트를 계산합니다. 값을 입력하면 즉시 결과가 표시됩니다.</p>
+  <div class="card">
+    <label class="label">X%의 Y는?</label>
+    <div class="row">
+      <input type="number" id="p1a" placeholder="X (%)" oninput="calc1()">
+      <input type="number" id="p1b" placeholder="Y" oninput="calc1()">
+    </div>
+    <div class="output" id="r1">—</div>
+  </div>
+  <div class="card">
+    <label class="label">X는 Y의 몇 %인가?</label>
+    <div class="row">
+      <input type="number" id="p2a" placeholder="X" oninput="calc2()">
+      <input type="number" id="p2b" placeholder="Y" oninput="calc2()">
+    </div>
+    <div class="output" id="r2">—</div>
+  </div>
+  <div class="card">
+    <label class="label">X에서 Y로의 증감률</label>
+    <div class="row">
+      <input type="number" id="p3a" placeholder="이전 값 (X)" oninput="calc3()">
+      <input type="number" id="p3b" placeholder="현재 값 (Y)" oninput="calc3()">
+    </div>
+    <div class="output" id="r3">—</div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function calc1(){const a=parseFloat(document.getElementById('p1a').value),b=parseFloat(document.getElementById('p1b').value);document.getElementById('r1').textContent=(!isNaN(a)&&!isNaN(b))?`${a}%의 ${b} = ${(a/100*b).toFixed(4).replace(/\.?0+$/,'')} `:'—';}
+function calc2(){const a=parseFloat(document.getElementById('p2a').value),b=parseFloat(document.getElementById('p2b').value);document.getElementById('r2').textContent=(!isNaN(a)&&!isNaN(b)&&b!==0)?`${a}는 ${b}의 ${(a/b*100).toFixed(4).replace(/\.?0+$/,'')}%`:'—';}
+function calc3(){const a=parseFloat(document.getElementById('p3a').value),b=parseFloat(document.getElementById('p3b').value);if(!isNaN(a)&&!isNaN(b)&&a!==0){const c=(b-a)/Math.abs(a)*100;document.getElementById('r3').textContent=`${c>0?'+':''}${c.toFixed(2)}% ${c>0?'증가':'감소'}`;}else document.getElementById('r3').textContent='—';}
+</script>
+</body></html>

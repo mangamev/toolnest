@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 랜덤 숫자 생성기. 원하는 범위에서 랜덤 숫자를 즉시 생성하세요.">
+  <meta name="keywords" content="랜덤 숫자 생성기, 무작위 숫자, 랜덤 번호 생성, 로또 번호 생성">
+  <title>랜덤 숫자 생성기 – 무료 온라인 도구 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/random-number.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">랜덤 숫자 생성기</h1>
+  <p class="tool-desc">원하는 범위에서 하나 또는 여러 개의 랜덤 숫자를 생성합니다.</p>
+  <div class="card">
+    <div class="row">
+      <div><label class="label">최솟값</label><input type="number" id="min" value="1"></div>
+      <div><label class="label">최댓값</label><input type="number" id="max" value="100"></div>
+      <div><label class="label">개수</label><input type="number" id="count" value="1" min="1" max="1000"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generate()">생성</button>
+      <button class="btn btn-secondary" onclick="generate()">🔄 다시 생성</button>
+    </div>
+    <div class="output" id="output" style="font-size:2rem;text-align:center;font-family:'Space Grotesk',sans-serif;letter-spacing:2px">—</div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('output').textContent)">복사</button></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function generate(){
+  const min=parseInt(document.getElementById('min').value),max=parseInt(document.getElementById('max').value),count=Math.min(parseInt(document.getElementById('count').value)||1,1000);
+  if(min>max){document.getElementById('output').textContent='최솟값은 최댓값보다 작아야 합니다';return;}
+  const results=Array.from({length:count},()=>Math.floor(Math.random()*(max-min+1))+min);
+  document.getElementById('output').textContent=results.join(count>1?', ':'');
+  document.getElementById('output').style.fontSize=count>5?'1rem':'2rem';
+}
+generate();
+</script>
+</body></html>

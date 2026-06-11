@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 유닉스 타임스탬프 변환기. Unix 타임스탬프를 날짜로 변환하거나 날짜를 타임스탬프로 변환하세요.">
+  <title>타임스탬프 변환기 – Unix 시간 변환 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/timestamp-converter.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">타임스탬프 변환기</h1>
+  <p class="tool-desc">Unix 타임스탬프를 날짜/시간으로 변환하거나, 날짜를 Unix 타임스탬프로 변환합니다.</p>
+  <div class="card">
+    <label class="label">현재 Unix 타임스탬프</label>
+    <div class="output" id="current" style="font-size:1.4rem;text-align:center;font-family:'Space Grotesk',sans-serif">—</div>
+    <div class="btn-row"><button class="btn btn-success" onclick="copyRaw(document.getElementById('current').textContent)">복사</button></div>
+    <label class="label" style="margin-top:20px">타임스탬프 → 날짜</label>
+    <input type="number" id="tsInput" placeholder="예: 1700000000">
+    <div class="btn-row"><button class="btn btn-primary" onclick="tsToDate()">변환</button></div>
+    <div class="output" id="tsOutput">—</div>
+    <label class="label" style="margin-top:20px">날짜 → 타임스탬프</label>
+    <input type="text" id="dateInput" placeholder="예: 2024-01-15 12:00:00">
+    <div class="btn-row"><button class="btn btn-primary" onclick="dateToTs()">변환</button></div>
+    <div class="output" id="dateOutput">—</div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function updateCurrent(){document.getElementById('current').textContent=Math.floor(Date.now()/1000);}
+updateCurrent();setInterval(updateCurrent,1000);
+function tsToDate(){const ts=parseInt(document.getElementById('tsInput').value);if(isNaN(ts)){document.getElementById('tsOutput').textContent='잘못된 타임스탬프';return;}const d=new Date(ts*1000);document.getElementById('tsOutput').textContent=d.toUTCString()+'\n한국 시간: '+d.toLocaleString('ko-KR');}
+function dateToTs(){const d=new Date(document.getElementById('dateInput').value);if(isNaN(d)){document.getElementById('dateOutput').textContent='잘못된 날짜 형식';return;}document.getElementById('dateOutput').textContent=Math.floor(d.getTime()/1000);}
+</script>
+</body></html>

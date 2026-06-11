@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 화면 비율 계산기. 영상, 이미지, 화면 해상도의 가로세로 비율을 계산하세요.">
+  <meta name="keywords" content="화면 비율 계산기, 해상도 계산기, 16대9 계산, 가로세로 비율">
+  <title>화면 비율 계산기 – 무료 해상도 계산 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/aspect-ratio.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">화면 비율 계산기</h1>
+  <p class="tool-desc">영상, 이미지, 화면의 가로세로 비율을 계산합니다. 16:9, 4:3 등 일반적인 비율을 빠르게 선택하세요.</p>
+  <div class="card">
+    <label class="label">자주 쓰는 비율</label>
+    <div class="btn-row" style="margin-bottom:16px">
+      <button class="btn btn-secondary" onclick="setRatio(16,9)">16:9</button>
+      <button class="btn btn-secondary" onclick="setRatio(4,3)">4:3</button>
+      <button class="btn btn-secondary" onclick="setRatio(1,1)">1:1</button>
+      <button class="btn btn-secondary" onclick="setRatio(21,9)">21:9</button>
+      <button class="btn btn-secondary" onclick="setRatio(9,16)">9:16</button>
+    </div>
+    <div class="row">
+      <div><label class="label">가로 (px)</label><input type="number" id="w" placeholder="예: 1920" oninput="calcH()"></div>
+      <div><label class="label">세로 (px)</label><input type="number" id="h" placeholder="예: 1080" oninput="calcW()"></div>
+    </div>
+    <div class="row">
+      <div><label class="label">비율 가로</label><input type="number" id="rw" placeholder="16" oninput="calcH()"></div>
+      <div><label class="label">비율 세로</label><input type="number" id="rh" placeholder="9" oninput="calcH()"></div>
+    </div>
+    <div class="output" id="result">위에 값을 입력하세요</div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function setRatio(w,h){document.getElementById('rw').value=w;document.getElementById('rh').value=h;calcH();}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+function calcH(){const w=parseFloat(document.getElementById('w').value),rw=parseFloat(document.getElementById('rw').value),rh=parseFloat(document.getElementById('rh').value);if(w&&rw&&rh){const h=Math.round(w*rh/rw);document.getElementById('h').value=h;showResult(w,h,rw,rh);}}
+function calcW(){const h=parseFloat(document.getElementById('h').value),rw=parseFloat(document.getElementById('rw').value),rh=parseFloat(document.getElementById('rh').value);if(h&&rw&&rh){const w=Math.round(h*rw/rh);document.getElementById('w').value=w;showResult(w,h,rw,rh);}else{const w=parseFloat(document.getElementById('w').value);if(w&&h){const g=gcd(w,h);showResult(w,h,w/g,h/g);}}}
+function showResult(w,h,rw,rh){document.getElementById('result').textContent=`${w} × ${h} px  |  비율: ${rw}:${rh}`;}
+setRatio(16,9);
+</script>
+</body></html>

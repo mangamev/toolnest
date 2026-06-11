@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 텍스트 비교 도구. 두 텍스트의 차이점을 즉시 찾아 강조 표시합니다.">
+  <title>텍스트 비교기 – 두 텍스트 차이 찾기 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <style>
+    .added{background:#00d4aa33;color:#00d4aa;border-radius:3px;padding:0 2px;}
+    .removed{background:#ff6b6b33;color:#ff6b6b;text-decoration:line-through;border-radius:3px;padding:0 2px;}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:600px){.split{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/text-diff.html">English</a></nav></header>
+<div class="tool-container" style="max-width:1000px">
+  <h1 class="tool-title">텍스트 비교기</h1>
+  <p class="tool-desc">두 텍스트를 비교하여 추가된 내용과 삭제된 내용을 색상으로 구분해 표시합니다.</p>
+  <div class="card">
+    <div class="split">
+      <div><label class="label">원본 텍스트</label><textarea id="a" placeholder="원본 텍스트..." style="min-height:160px"></textarea></div>
+      <div><label class="label">수정된 텍스트</label><textarea id="b" placeholder="수정된 텍스트..." style="min-height:160px"></textarea></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="diff()">비교하기</button><button class="btn btn-secondary" onclick="document.getElementById('a').value='';document.getElementById('b').value='';document.getElementById('result').innerHTML=''">초기화</button></div>
+    <label class="label">비교 결과</label>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:0;font-size:0.85rem;line-height:1.8;max-height:300px;overflow-y:auto;" id="result">비교하기 버튼을 클릭하세요...</div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+function diff(){
+  const a=document.getElementById('a').value.split(/\s+/),b=document.getElementById('b').value.split(/\s+/);
+  const bSet=new Set(b),aSet=new Set(a);
+  const html=b.map(w=>aSet.has(w)?w:`<span class="added">${w}</span>`).join(' ')+'<br><br>'+
+    a.map(w=>bSet.has(w)?'':'<span class="removed">'+w+'</span>').filter(Boolean).join(' ');
+  document.getElementById('result').innerHTML=html||'차이점이 없습니다.';
+}
+</script>
+</body></html>
