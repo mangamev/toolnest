@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online PDF organizer. Merge multiple PDFs, extract or remove pages, rotate pages, and reorder them — all in your browser. No upload, no signup.">
+  <title>PDF Organizer – Merge, Split, Rotate & Delete Pages | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    input[type="file"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; padding: 10px 12px; }
+    input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; margin-right: 10px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+    .page-list { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow-y: auto; margin-top: 12px; }
+    .page-row { display: flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 0.8rem; }
+    .page-row .plabel { flex: 1; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .page-row .rot { color: var(--accent2); min-width: 36px; text-align: center; font-size: 0.75rem; font-family: 'Space Grotesk',sans-serif; }
+    .icon-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; }
+    .icon-btn:hover { border-color: var(--accent); }
+    .note { color: var(--muted); font-size: 0.8rem; line-height: 1.6; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">PDF Organizer</h1>
+  <p class="tool-desc">Merge multiple PDFs into one, reorder or delete pages to split a document, and rotate individual pages — then export the result. Everything runs locally in your browser.</p>
+
+  <div class="card">
+    <label class="label">Upload PDF(s)</label>
+    <input type="file" id="fileInput" accept="application/pdf" multiple>
+    <p class="note">Upload one PDF to reorder, rotate, or remove its pages (a simple way to split). Upload multiple PDFs to merge them — pages are added in upload order.</p>
+  </div>
+
+  <div class="card" id="listCard" style="display:none;">
+    <label class="label">Pages (<span id="pageTotal">0</span>)</label>
+    <div class="page-list" id="pageList"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="exportPdf()">Export PDF</button>
+      <button class="btn btn-secondary" onclick="resetList()">Reset</button>
+    </div>
+    <div class="output" id="output" style="display:none;"></div>
+    <p class="note">✕ removes a page from the output (a quick way to split or delete pages). ↑/↓ reorder pages. ↺/↻ rotate a page by 90°. To extract just a few pages, remove all others and export.</p>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+let sources = [];   // { name, doc }
+let pageList = [];  // { srcIdx, pageIdx, rotation }
+let originalList = [];
+
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const files = [...e.target.files];
+  if (!files.length) return;
+  for (const file of files) {
+    try {
+      const bytes = await file.arrayBuffer();
+      const doc = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
+      const srcIdx = sources.length;
+      sources.push({ name: file.name, doc });
+      const count = doc.getPageCount();
+      for (let i = 0; i < count; i++) {
+        pageList.push({ srcIdx, pageIdx: i, rotation: 0 });
+      }
+    } catch (err) {
+      showToast('Could not read ' + file.name);
+    }
+  }
+  originalList = pageList.map(p => ({ ...p }));
+  document.getElementById('listCard').style.display = 'block';
+  document.getElementById('output').style.display = 'none';
+  renderList();
+  e.target.value = '';
+});
+
+function renderList() {
+  const container = document.getElementById('pageList');
+  document.getElementById('pageTotal').textContent = pageList.length;
+  container.innerHTML = '';
+  pageList.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'page-row';
+    const label = document.createElement('div');
+    label.className = 'plabel';
+    label.textContent = sources[item.srcIdx].name + ' — p.' + (item.pageIdx + 1);
+    row.appendChild(label);
+
+    const rot = document.createElement('div');
+    rot.className = 'rot';
+    rot.textContent = item.rotation + '°';
+    row.appendChild(rot);
+
+    row.appendChild(makeBtn('↺', () => { item.rotation = (item.rotation - 90 + 360) % 360; renderList(); }));
+    row.appendChild(makeBtn('↻', () => { item.rotation = (item.rotation + 90) % 360; renderList(); }));
+    row.appendChild(makeBtn('↑', () => { if (i > 0) { [pageList[i-1], pageList[i]] = [pageList[i], pageList[i-1]]; renderList(); } }));
+    row.appendChild(makeBtn('↓', () => { if (i < pageList.length-1) { [pageList[i+1], pageList[i]] = [pageList[i], pageList[i+1]]; renderList(); } }));
+    row.appendChild(makeBtn('✕', () => { pageList.splice(i, 1); renderList(); }));
+
+    container.appendChild(row);
+  });
+}
+
+function makeBtn(label, onClick) {
+  const b = document.createElement('button');
+  b.className = 'icon-btn';
+  b.textContent = label;
+  b.onclick = onClick;
+  return b;
+}
+
+function resetList() {
+  pageList = originalList.map(p => ({ ...p }));
+  document.getElementById('output').style.display = 'none';
+  renderList();
+}
+
+async function exportPdf() {
+  if (!pageList.length) { showToast('No pages left to export'); return; }
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.style.color = 'var(--accent2)';
+  out.textContent = 'Processing...';
+  try {
+    const outDoc = await PDFLib.PDFDocument.create();
+    for (const item of pageList) {
+      const [page] = await outDoc.copyPages(sources[item.srcIdx].doc, [item.pageIdx]);
+      const total = (page.getRotation().angle + item.rotation + 360) % 360;
+      page.setRotation(PDFLib.degrees(total));
+      outDoc.addPage(page);
+    }
+    const bytes = await outDoc.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'organized.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    out.textContent = 'Done! ' + pageList.length + ' page(s) exported and downloaded.';
+    showToast('PDF downloaded');
+  } catch (err) {
+    out.style.color = '#ff6b6b';
+    out.textContent = 'Error: ' + err.message;
+  }
+}
+</script>
+</body></html>

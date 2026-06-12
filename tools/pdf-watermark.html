@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online PDF watermark tool. Add a custom text watermark — diagonal, centered, or tiled — to every page of a PDF directly in your browser.">
+  <title>PDF Watermark – Add Text Watermark to PDF Online | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    input[type="file"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; padding: 10px 12px; }
+    input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; margin-right: 10px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+    .note { color: var(--muted); font-size: 0.8rem; line-height: 1.6; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">PDF Watermark</h1>
+  <p class="tool-desc">Add a custom text watermark to every page of a PDF — centered diagonally or tiled across the page. Everything runs locally in your browser, nothing is uploaded.</p>
+
+  <div class="card">
+    <label class="label">Upload PDF</label>
+    <input type="file" id="fileInput" accept="application/pdf">
+    <div class="stat-row" id="fileInfo" style="display:none;">
+      <div class="stat"><strong id="pageCount">-</strong>Pages</div>
+    </div>
+  </div>
+
+  <div class="card" id="wmCard" style="display:none;">
+    <label class="label">Watermark text</label>
+    <input type="text" id="wmText" placeholder="e.g. CONFIDENTIAL" value="CONFIDENTIAL">
+
+    <div class="row">
+      <div>
+        <label class="label">Font size</label>
+        <input type="number" id="wmSize" min="8" max="200" value="48">
+      </div>
+      <div>
+        <label class="label">Opacity</label>
+        <input type="number" id="wmOpacity" min="0.05" max="1" step="0.05" value="0.25">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label class="label">Rotation (°)</label>
+        <input type="number" id="wmAngle" min="0" max="360" value="45">
+      </div>
+      <div>
+        <label class="label">Color</label>
+        <input type="color" id="wmColor" value="#6c63ff">
+      </div>
+    </div>
+    <label class="label">Layout</label>
+    <select id="wmLayout">
+      <option value="center">Centered (one large watermark)</option>
+      <option value="tile">Tiled (repeated across page)</option>
+    </select>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="applyWatermark()">Add Watermark & Download</button>
+    </div>
+    <div class="output" id="output" style="display:none;"></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+let pdfBytes = null;
+
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    pdfBytes = await file.arrayBuffer();
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    document.getElementById('pageCount').textContent = doc.getPageCount();
+    document.getElementById('fileInfo').style.display = 'flex';
+    document.getElementById('wmCard').style.display = 'block';
+    document.getElementById('output').style.display = 'none';
+  } catch (err) {
+    pdfBytes = null;
+    showToast('Could not read this PDF');
+  }
+});
+
+function hexToRgb01(hex) {
+  const v = hex.replace('#', '');
+  return {
+    r: parseInt(v.substring(0,2), 16) / 255,
+    g: parseInt(v.substring(2,4), 16) / 255,
+    b: parseInt(v.substring(4,6), 16) / 255
+  };
+}
+
+async function applyWatermark() {
+  if (!pdfBytes) { showToast('Upload a PDF first'); return; }
+  const text = document.getElementById('wmText').value || 'WATERMARK';
+  const size = parseFloat(document.getElementById('wmSize').value) || 48;
+  const opacity = parseFloat(document.getElementById('wmOpacity').value) || 0.25;
+  const angle = parseFloat(document.getElementById('wmAngle').value) || 0;
+  const rgb = hexToRgb01(document.getElementById('wmColor').value);
+  const layout = document.getElementById('wmLayout').value;
+
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.style.color = 'var(--accent2)';
+  out.textContent = 'Processing...';
+
+  try {
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    const font = await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+    const color = PDFLib.rgb(rgb.r, rgb.g, rgb.b);
+    const textWidth = font.widthOfTextAtSize(text, size);
+
+    doc.getPages().forEach(page => {
+      const { width, height } = page.getSize();
+      if (layout === 'center') {
+        page.drawText(text, {
+          x: width / 2 - textWidth / 2,
+          y: height / 2,
+          size, font, color, opacity,
+          rotate: PDFLib.degrees(angle)
+        });
+      } else {
+        const stepX = textWidth + size * 2;
+        const stepY = size * 4;
+        for (let y = -stepY; y < height + stepY; y += stepY) {
+          for (let x = -stepX; x < width + stepX; x += stepX) {
+            page.drawText(text, {
+              x, y, size, font, color, opacity,
+              rotate: PDFLib.degrees(angle)
+            });
+          }
+        }
+      }
+    });
+
+    const outBytes = await doc.save();
+    const blob = new Blob([outBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'watermarked.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    out.textContent = 'Done! Watermark added and PDF downloaded.';
+    showToast('PDF downloaded');
+  } catch (err) {
+    out.style.color = '#ff6b6b';
+    out.textContent = 'Error: ' + err.message;
+  }
+}
+</script>
+</body></html>
