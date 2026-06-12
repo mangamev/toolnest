@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online PDF compressor. Shrink PDF file size by rebuilding its internal structure and removing unused metadata, directly in your browser. No upload, no signup.">
+  <title>PDF Compressor – Reduce PDF File Size Online | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    input[type="file"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; padding: 10px 12px; }
+    input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; margin-right: 10px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+    .note { color: var(--muted); font-size: 0.8rem; line-height: 1.6; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">PDF Compressor</h1>
+  <p class="tool-desc">Reduce PDF file size by rebuilding the document's internal structure and stripping unused metadata. Runs entirely in your browser — nothing is uploaded.</p>
+
+  <div class="card">
+    <label class="label">Upload PDF</label>
+    <input type="file" id="fileInput" accept="application/pdf">
+    <div class="stat-row" id="fileInfo" style="display:none;">
+      <div class="stat"><strong id="origSize">-</strong>Original size</div>
+      <div class="stat"><strong id="pageCount">-</strong>Pages</div>
+    </div>
+  </div>
+
+  <div class="card" id="compressCard" style="display:none;">
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="compressPdf()">Compress & Download</button>
+    </div>
+    <div class="output" id="output" style="display:none;"></div>
+    <p class="note">This rebuilds the PDF with a single, compressed cross-reference table and removes title/author/metadata — this can meaningfully shrink PDFs that have been edited many times in desktop software. For PDFs whose size is dominated by large images, the reduction will be small, since image data itself isn't recompressed.</p>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+let pdfBytes = null;
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+}
+
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    pdfBytes = await file.arrayBuffer();
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    document.getElementById('origSize').textContent = formatBytes(pdfBytes.byteLength);
+    document.getElementById('pageCount').textContent = doc.getPageCount();
+    document.getElementById('fileInfo').style.display = 'flex';
+    document.getElementById('compressCard').style.display = 'block';
+    document.getElementById('output').style.display = 'none';
+  } catch (err) {
+    pdfBytes = null;
+    showToast('Could not read this PDF');
+  }
+});
+
+async function compressPdf() {
+  if (!pdfBytes) { showToast('Upload a PDF first'); return; }
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.style.color = 'var(--accent2)';
+  out.textContent = 'Processing...';
+
+  try {
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true, updateMetadata: false });
+    doc.setTitle('');
+    doc.setAuthor('');
+    doc.setSubject('');
+    doc.setKeywords([]);
+    doc.setProducer('');
+    doc.setCreator('');
+
+    const outBytes = await doc.save({ useObjectStreams: true });
+    const origSize = pdfBytes.byteLength;
+    const newSize = outBytes.byteLength;
+    const diffPct = ((origSize - newSize) / origSize * 100);
+
+    const blob = new Blob([outBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'compressed.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    if (diffPct > 1) {
+      out.textContent = 'Done! ' + formatBytes(origSize) + ' → ' + formatBytes(newSize) + ' (' + diffPct.toFixed(1) + '% smaller). PDF downloaded.';
+    } else {
+      out.textContent = 'Done! ' + formatBytes(origSize) + ' → ' + formatBytes(newSize) + '. This PDF was already well-optimized, so the size barely changed. PDF downloaded.';
+    }
+    showToast('PDF downloaded');
+  } catch (err) {
+    out.style.color = '#ff6b6b';
+    out.textContent = 'Error: ' + err.message;
+  }
+}
+</script>
+</body></html>
