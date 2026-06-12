@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTP Status Code Reference – QuickFreeTools</title>
+  <meta name="description" content="Complete HTTP status code reference. Search and learn about every HTTP response code: 1xx, 2xx, 3xx, 4xx, 5xx.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f1117; --surface:#181b23; --surface2:#1f2330; --border:#2a2f3e; --accent:#6c63ff; --accent2:#00d4aa; --text:#e8eaf0; --muted:#7a7f96; --radius:12px; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    header { border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; background:rgba(15,17,23,0.95); backdrop-filter:blur(8px); z-index:100; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:1.25rem; font-weight:700; color:var(--text); text-decoration:none; }
+    .logo span { color:var(--accent); }
+    .back { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+    .back:hover { color:var(--text); }
+    main { max-width:800px; margin:0 auto; padding:40px 24px 80px; }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; margin-bottom:8px; }
+    .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:24px; }
+    .search-wrap { position:relative; margin-bottom:24px; }
+    .search-wrap input { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.95rem; padding:12px 16px 12px 42px; outline:none; }
+    .search-wrap input:focus { border-color:var(--accent); }
+    .search-wrap::before { content:'🔍'; position:absolute; left:14px; top:50%; transform:translateY(-50%); }
+    .filter-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px; }
+    .ftab { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-size:0.82rem; cursor:pointer; color:var(--muted); transition:all 0.2s; }
+    .ftab.active { color:#fff; border-color:transparent; }
+    .ftab[data-cat="all"].active { background:var(--accent); }
+    .ftab[data-cat="1"].active { background:#7a7f96; }
+    .ftab[data-cat="2"].active { background:#00d4aa; }
+    .ftab[data-cat="3"].active { background:#ffd93d; color:#000; }
+    .ftab[data-cat="4"].active { background:#ff6b6b; }
+    .ftab[data-cat="5"].active { background:#a78bfa; }
+    .group { margin-bottom:32px; }
+    .group-title { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:700; margin-bottom:12px; padding:8px 14px; border-radius:8px; }
+    .g1 { background:#7a7f9620; color:#7a7f96; }
+    .g2 { background:#00d4aa20; color:#00d4aa; }
+    .g3 { background:#ffd93d20; color:#ffd93d; }
+    .g4 { background:#ff6b6b20; color:#ff6b6b; }
+    .g5 { background:#a78bfa20; color:#a78bfa; }
+    .status-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-bottom:8px; display:flex; gap:16px; align-items:flex-start; }
+    .code-badge { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; min-width:52px; padding-top:2px; }
+    .c1 { color:#7a7f96; } .c2 { color:#00d4aa; } .c3 { color:#ffd93d; } .c4 { color:#ff6b6b; } .c5 { color:#a78bfa; }
+    .status-info h3 { font-size:0.95rem; font-weight:600; margin-bottom:4px; }
+    .status-info p { font-size:0.82rem; color:var(--muted); line-height:1.55; }
+    .hidden { display:none; }
+  </style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">Quick<span>FreeTools</span></a>
+  <a class="back" href="/">← All Tools</a>
+</header>
+<main>
+  <h1>📡 HTTP Status Codes</h1>
+  <p class="subtitle">Complete reference for all HTTP response status codes. Search by code or name.</p>
+
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Search codes or names... (e.g. 404, Not Found, redirect)" oninput="filter()">
+  </div>
+
+  <div class="filter-tabs">
+    <div class="ftab active" data-cat="all" onclick="setCat('all',this)">All</div>
+    <div class="ftab" data-cat="1" onclick="setCat('1',this)">1xx Informational</div>
+    <div class="ftab" data-cat="2" onclick="setCat('2',this)">2xx Success</div>
+    <div class="ftab" data-cat="3" onclick="setCat('3',this)">3xx Redirection</div>
+    <div class="ftab" data-cat="4" onclick="setCat('4',this)">4xx Client Error</div>
+    <div class="ftab" data-cat="5" onclick="setCat('5',this)">5xx Server Error</div>
+  </div>
+
+  <div id="list"></div>
+</main>
+
+<script>
+const codes = [
+  {code:100,name:'Continue',desc:'The server has received the request headers and the client should proceed to send the request body.'},
+  {code:101,name:'Switching Protocols',desc:'The requester has asked the server to switch protocols and the server has agreed to do so (e.g., HTTP → WebSocket).'},
+  {code:102,name:'Processing',desc:'WebDAV: the server has received and is processing the request, but no response is available yet.'},
+  {code:103,name:'Early Hints',desc:'Used to return some response headers before final HTTP message, allowing browsers to preload resources.'},
+  {code:200,name:'OK',desc:'The request succeeded. The response body contains the requested resource.'},
+  {code:201,name:'Created',desc:'The request succeeded and a new resource was created as a result. Typically used for POST requests.'},
+  {code:202,name:'Accepted',desc:'The request has been received but not yet acted upon. It is non-committal.'},
+  {code:203,name:'Non-Authoritative Information',desc:'The response was returned by a transforming proxy that modified the 200 OK response from the origin server.'},
+  {code:204,name:'No Content',desc:'The request succeeded, but there is no content to send back. Often used for DELETE requests.'},
+  {code:205,name:'Reset Content',desc:'Tells the client to reset the document view — e.g., clear a form after submission.'},
+  {code:206,name:'Partial Content',desc:'Used when the client sent a Range header and the server delivers only part of the resource.'},
+  {code:207,name:'Multi-Status',desc:'WebDAV: conveys information about multiple resources in situations where multiple status codes might be appropriate.'},
+  {code:208,name:'Already Reported',desc:'WebDAV: used inside a DAV binding to avoid enumerating the internal members of multiple bindings to the same collection.'},
+  {code:226,name:'IM Used',desc:'The server has fulfilled a GET request for the resource, and the response is a representation of the result of one or more instance manipulations.'},
+  {code:300,name:'Multiple Choices',desc:'The request has more than one possible response. The user or user agent should choose one.'},
+  {code:301,name:'Moved Permanently',desc:'The URL of the requested resource has been changed permanently. Browsers and crawlers will update their bookmarks/links.'},
+  {code:302,name:'Found',desc:'This response code means that the URI of the requested resource has been changed temporarily.'},
+  {code:303,name:'See Other',desc:'The server sends this response to direct the client to get the requested resource at another URI with a GET request.'},
+  {code:304,name:'Not Modified',desc:'Used for caching: the response has not been modified since the client last requested it.'},
+  {code:307,name:'Temporary Redirect',desc:'The server sends this response to direct the client to get the requested resource at another URI with the same method used in the prior request.'},
+  {code:308,name:'Permanent Redirect',desc:'This means that the resource is now permanently located at another URI. Unlike 301, the request method must not be changed.'},
+  {code:400,name:'Bad Request',desc:'The server cannot or will not process the request due to a client error — malformed syntax, invalid request message framing, etc.'},
+  {code:401,name:'Unauthorized',desc:'The client must authenticate itself to get the requested response. Often returned when login is needed.'},
+  {code:402,name:'Payment Required',desc:'Reserved for future use. Some APIs use it to signal payment is required.'},
+  {code:403,name:'Forbidden',desc:'The client does not have access rights to the content — unlike 401, the server knows who you are, but refuses access.'},
+  {code:404,name:'Not Found',desc:'The server cannot find the requested resource. The URL is not recognized or the resource does not exist.'},
+  {code:405,name:'Method Not Allowed',desc:'The request method is known by the server but is not supported by the target resource (e.g., sending POST to a read-only endpoint).'},
+  {code:406,name:'Not Acceptable',desc:'No content matching the client\'s accept headers can be found.'},
+  {code:407,name:'Proxy Authentication Required',desc:'Authentication must be done by a proxy.'},
+  {code:408,name:'Request Timeout',desc:'The server timed out waiting for the request. The client can resend the request.'},
+  {code:409,name:'Conflict',desc:'The request conflicts with the current state of the server — e.g., editing a resource that was modified by another request.'},
+  {code:410,name:'Gone',desc:'The content has been permanently deleted from the server and no forwarding address is available.'},
+  {code:411,name:'Length Required',desc:'Server rejected the request because the Content-Length header field is not defined.'},
+  {code:412,name:'Precondition Failed',desc:'The client has indicated preconditions in its headers which the server does not meet.'},
+  {code:413,name:'Content Too Large',desc:'Request entity is larger than limits defined by the server.'},
+  {code:414,name:'URI Too Long',desc:'The URI requested by the client is longer than the server is willing to interpret.'},
+  {code:415,name:'Unsupported Media Type',desc:'The media format of the requested data is not supported by the server.'},
+  {code:416,name:'Range Not Satisfiable',desc:'The range specified by the Range header field in the request can\'t be fulfilled.'},
+  {code:417,name:'Expectation Failed',desc:'The expectation indicated in the Expect request header field can\'t be met by the server.'},
+  {code:418,name:"I'm a Teapot",desc:'The server refuses to brew coffee because it is, permanently, a teapot. (RFC 2324, an April Fools\' joke.)'},
+  {code:421,name:'Misdirected Request',desc:'The request was directed at a server that is not able to produce a response.'},
+  {code:422,name:'Unprocessable Content',desc:'The request was well-formed but could not be followed due to semantic errors (e.g., validation failed).'},
+  {code:423,name:'Locked',desc:'WebDAV: the resource being accessed is locked.'},
+  {code:424,name:'Failed Dependency',desc:'WebDAV: the request failed because it depended on another request that failed.'},
+  {code:425,name:'Too Early',desc:'Indicates that the server is unwilling to risk processing a request that might be replayed.'},
+  {code:426,name:'Upgrade Required',desc:'The server refuses to perform the request using the current protocol but might after the client upgrades to a different protocol.'},
+  {code:428,name:'Precondition Required',desc:'The origin server requires the request to be conditional to prevent the "lost update" problem.'},
+  {code:429,name:'Too Many Requests',desc:'The user has sent too many requests in a given amount of time (rate limiting).'},
+  {code:431,name:'Request Header Fields Too Large',desc:'The server is unwilling to process the request because its header fields are too large.'},
+  {code:451,name:'Unavailable For Legal Reasons',desc:'The user requested a resource that cannot legally be provided (e.g., government censorship).'},
+  {code:500,name:'Internal Server Error',desc:'The server has encountered a situation it doesn\'t know how to handle. Generic server-side error.'},
+  {code:501,name:'Not Implemented',desc:'The request method is not supported by the server and cannot be handled.'},
+  {code:502,name:'Bad Gateway',desc:'The server, while working as a gateway, got an invalid response from the upstream server.'},
+  {code:503,name:'Service Unavailable',desc:'The server is not ready to handle the request — often due to maintenance or overload.'},
+  {code:504,name:'Gateway Timeout',desc:'The server is acting as a gateway and cannot get a response in time from the upstream server.'},
+  {code:505,name:'HTTP Version Not Supported',desc:'The HTTP version used in the request is not supported by the server.'},
+  {code:506,name:'Variant Also Negotiates',desc:'The server has an internal configuration error: transparent content negotiation results in a circular reference.'},
+  {code:507,name:'Insufficient Storage',desc:'WebDAV: the server is unable to store the representation needed to complete the request.'},
+  {code:508,name:'Loop Detected',desc:'WebDAV: the server detected an infinite loop while processing the request.'},
+  {code:510,name:'Not Extended',desc:'Further extensions to the request are required for the server to fulfil it.'},
+  {code:511,name:'Network Authentication Required',desc:'The client needs to authenticate to gain network access — often used by captive portals.'},
+];
+
+const groups = [
+  {prefix:'1', label:'1xx — Informational', cls:'g1', badge:'c1'},
+  {prefix:'2', label:'2xx — Success', cls:'g2', badge:'c2'},
+  {prefix:'3', label:'3xx — Redirection', cls:'g3', badge:'c3'},
+  {prefix:'4', label:'4xx — Client Errors', cls:'g4', badge:'c4'},
+  {prefix:'5', label:'5xx — Server Errors', cls:'g5', badge:'c5'},
+];
+
+let activeCat = 'all';
+
+function setCat(cat, el) {
+  activeCat = cat;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  filter();
+}
+
+function filter() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  groups.forEach(g => {
+    const filtered = codes.filter(c => {
+      const matchCat = activeCat === 'all' || String(c.code).startsWith(activeCat);
+      const matchQ = !q || String(c.code).includes(q) || c.name.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q);
+      return matchCat && matchQ && String(c.code).startsWith(g.prefix);
+    });
+    if (!filtered.length) return;
+    list.innerHTML += `<div class="group">
+      <div class="group-title ${g.cls}">${g.label}</div>
+      ${filtered.map(c=>`<div class="status-card">
+        <div class="code-badge ${g.badge}">${c.code}</div>
+        <div class="status-info"><h3>${c.name}</h3><p>${c.desc}</p></div>
+      </div>`).join('')}
+    </div>`;
+  });
+  if (!list.innerHTML) list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px">No matching status codes found.</p>';
+}
+
+filter();
+</script>
+</body>
+</html>

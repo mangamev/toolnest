@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit Converter – QuickFreeTools</title>
+  <meta name="description" content="Free online unit converter. Convert length, weight, temperature, area, volume and more instantly.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f1117; --surface:#181b23; --surface2:#1f2330; --border:#2a2f3e; --accent:#6c63ff; --accent2:#00d4aa; --text:#e8eaf0; --muted:#7a7f96; --radius:12px; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    header { border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; background:rgba(15,17,23,0.95); backdrop-filter:blur(8px); z-index:100; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:1.25rem; font-weight:700; color:var(--text); text-decoration:none; }
+    .logo span { color:var(--accent); }
+    .back { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+    .back:hover { color:var(--text); }
+    main { max-width:700px; margin:0 auto; padding:40px 24px 80px; }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; margin-bottom:8px; }
+    .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:32px; }
+    .category-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+    .tab { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:6px 16px; font-size:0.82rem; cursor:pointer; color:var(--muted); transition:all 0.2s; }
+    .tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .converter-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; }
+    .row { display:flex; gap:12px; align-items:flex-end; margin-bottom:16px; }
+    .field { flex:1; }
+    label { font-size:0.82rem; color:var(--muted); display:block; margin-bottom:6px; }
+    input[type=number] { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Inter',sans-serif; font-size:1rem; padding:10px 12px; outline:none; }
+    input[type=number]:focus { border-color:var(--accent); }
+    select { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.9rem; padding:10px 12px; outline:none; }
+    select:focus { border-color:var(--accent); }
+    .swap-btn { background:var(--surface2); border:1px solid var(--border); border-radius:8px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.1rem; flex-shrink:0; transition:border-color 0.2s; }
+    .swap-btn:hover { border-color:var(--accent); }
+    .result-box { background:var(--surface2); border-radius:8px; padding:16px 20px; margin-top:8px; }
+    .result-box .result-val { font-size:1.4rem; font-weight:600; color:var(--accent2); }
+    .result-box .result-label { font-size:0.8rem; color:var(--muted); margin-top:4px; }
+    .all-results { margin-top:20px; }
+    .all-results h3 { font-size:0.82rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; }
+    .result-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .result-item { background:var(--surface2); border-radius:8px; padding:10px 14px; }
+    .result-item .val { font-size:0.95rem; font-weight:600; color:var(--text); }
+    .result-item .unit { font-size:0.75rem; color:var(--muted); }
+  </style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">Quick<span>FreeTools</span></a>
+  <a class="back" href="/">← All Tools</a>
+</header>
+<main>
+  <h1>📐 Unit Converter</h1>
+  <p class="subtitle">Convert between units of length, weight, temperature, area, volume and speed.</p>
+
+  <div class="category-tabs" id="tabs"></div>
+
+  <div class="converter-box">
+    <div class="row">
+      <div class="field">
+        <label>From</label>
+        <input type="number" id="fromVal" value="1" oninput="convert()">
+      </div>
+      <div class="field">
+        <label>&nbsp;</label>
+        <select id="fromUnit" onchange="convert()"></select>
+      </div>
+      <div class="swap-btn" onclick="swapUnits()" title="Swap">⇄</div>
+      <div class="field">
+        <label>&nbsp;</label>
+        <select id="toUnit" onchange="convert()"></select>
+      </div>
+    </div>
+    <div class="result-box">
+      <div class="result-val" id="resultVal">–</div>
+      <div class="result-label" id="resultLabel"></div>
+    </div>
+    <div class="all-results">
+      <h3>All conversions</h3>
+      <div class="result-grid" id="allResults"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const categories = {
+  Length: {
+    units: { Meter:1, Kilometer:1000, Centimeter:0.01, Millimeter:0.001, Mile:1609.344, Yard:0.9144, Foot:0.3048, Inch:0.0254, 'Nautical Mile':1852 },
+    symbol: { Meter:'m', Kilometer:'km', Centimeter:'cm', Millimeter:'mm', Mile:'mi', Yard:'yd', Foot:'ft', Inch:'in', 'Nautical Mile':'nmi' }
+  },
+  Weight: {
+    units: { Kilogram:1, Gram:0.001, Milligram:0.000001, Pound:0.45359237, Ounce:0.028349523, Ton:1000, Stone:6.35029318 },
+    symbol: { Kilogram:'kg', Gram:'g', Milligram:'mg', Pound:'lb', Ounce:'oz', Ton:'t', Stone:'st' }
+  },
+  Temperature: { special: true },
+  Area: {
+    units: { 'Square Meter':1, 'Square Kilometer':1e6, 'Square Centimeter':0.0001, 'Square Mile':2589988.11, 'Square Yard':0.83612736, 'Square Foot':0.09290304, 'Square Inch':0.00064516, Hectare:10000, Acre:4046.856422 },
+    symbol: { 'Square Meter':'m²', 'Square Kilometer':'km²', 'Square Centimeter':'cm²', 'Square Mile':'mi²', 'Square Yard':'yd²', 'Square Foot':'ft²', 'Square Inch':'in²', Hectare:'ha', Acre:'ac' }
+  },
+  Volume: {
+    units: { Liter:1, Milliliter:0.001, 'Cubic Meter':1000, 'US Gallon':3.785411784, 'US Quart':0.946352946, 'US Pint':0.473176473, 'US Cup':0.2365882365, 'US Fluid Oz':0.0295735296, 'US Tablespoon':0.0147867648, 'US Teaspoon':0.0049289216, 'Imperial Gallon':4.54609, 'Imperial Pint':0.5682612 },
+    symbol: { Liter:'L', Milliliter:'mL', 'Cubic Meter':'m³', 'US Gallon':'gal', 'US Quart':'qt', 'US Pint':'pt', 'US Cup':'cup', 'US Fluid Oz':'fl oz', 'US Tablespoon':'tbsp', 'US Teaspoon':'tsp', 'Imperial Gallon':'imp gal', 'Imperial Pint':'imp pt' }
+  },
+  Speed: {
+    units: { 'Meter/sec':1, 'Km/hour':0.27778, 'Mile/hour':0.44704, Knot:0.514444, 'Foot/sec':0.3048 },
+    symbol: { 'Meter/sec':'m/s', 'Km/hour':'km/h', 'Mile/hour':'mph', Knot:'kn', 'Foot/sec':'ft/s' }
+  }
+};
+
+const tempUnits = ['Celsius','Fahrenheit','Kelvin'];
+let currentCat = 'Length';
+
+function buildTabs() {
+  const el = document.getElementById('tabs');
+  Object.keys(categories).forEach(cat => {
+    const t = document.createElement('div');
+    t.className = 'tab' + (cat === currentCat ? ' active' : '');
+    t.textContent = cat;
+    t.onclick = () => { currentCat = cat; buildTabs(); buildSelects(); convert(); };
+    el.appendChild(t);
+  });
+}
+
+function buildSelects() {
+  const from = document.getElementById('fromUnit');
+  const to = document.getElementById('toUnit');
+  from.innerHTML = to.innerHTML = '';
+  const units = currentCat === 'Temperature' ? tempUnits : Object.keys(categories[currentCat].units);
+  units.forEach((u, i) => {
+    from.innerHTML += `<option value="${u}">${u}</option>`;
+    to.innerHTML += `<option value="${u}" ${i===1?'selected':''}>${u}</option>`;
+  });
+  convert();
+}
+
+function toC(val, unit) {
+  if (unit==='Celsius') return val;
+  if (unit==='Fahrenheit') return (val-32)*5/9;
+  return val-273.15;
+}
+function fromC(val, unit) {
+  if (unit==='Celsius') return val;
+  if (unit==='Fahrenheit') return val*9/5+32;
+  return val+273.15;
+}
+
+function fmt(n) {
+  if (Math.abs(n) >= 1e9 || (Math.abs(n) < 0.0001 && n !== 0)) return n.toExponential(4);
+  return parseFloat(n.toPrecision(7)).toString();
+}
+
+function convert() {
+  const val = parseFloat(document.getElementById('fromVal').value);
+  const fu = document.getElementById('fromUnit').value;
+  const tu = document.getElementById('toUnit').value;
+  if (isNaN(val)) { document.getElementById('resultVal').textContent = '–'; return; }
+
+  let result;
+  if (currentCat === 'Temperature') {
+    result = fromC(toC(val, fu), tu);
+  } else {
+    const cat = categories[currentCat];
+    result = val * cat.units[fu] / cat.units[tu];
+  }
+
+  document.getElementById('resultVal').textContent = fmt(result) + ' ' + tu;
+  document.getElementById('resultLabel').textContent = val + ' ' + fu + ' = ' + fmt(result) + ' ' + tu;
+
+  // All conversions
+  const grid = document.getElementById('allResults');
+  grid.innerHTML = '';
+  const units = currentCat === 'Temperature' ? tempUnits : Object.keys(categories[currentCat].units);
+  units.forEach(u => {
+    let r;
+    if (currentCat === 'Temperature') r = fromC(toC(val, fu), u);
+    else r = val * categories[currentCat].units[fu] / categories[currentCat].units[u];
+    const sym = currentCat !== 'Temperature' ? (categories[currentCat].symbol[u] || '') : '';
+    grid.innerHTML += `<div class="result-item"><div class="val">${fmt(r)} ${sym}</div><div class="unit">${u}</div></div>`;
+  });
+}
+
+function swapUnits() {
+  const from = document.getElementById('fromUnit');
+  const to = document.getElementById('toUnit');
+  const tmp = from.value;
+  from.value = to.value;
+  to.value = tmp;
+  convert();
+}
+
+buildTabs();
+buildSelects();
+</script>
+</body>
+</html>

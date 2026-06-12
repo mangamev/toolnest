@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP Address Lookup – QuickFreeTools</title>
+  <meta name="description" content="Free online IP address lookup. Find your IP address, location, ISP, timezone and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f1117; --surface:#181b23; --surface2:#1f2330; --border:#2a2f3e; --accent:#6c63ff; --accent2:#00d4aa; --text:#e8eaf0; --muted:#7a7f96; --radius:12px; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    header { border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; background:rgba(15,17,23,0.95); backdrop-filter:blur(8px); z-index:100; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:1.25rem; font-weight:700; color:var(--text); text-decoration:none; }
+    .logo span { color:var(--accent); }
+    .back { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+    .back:hover { color:var(--text); }
+    main { max-width:700px; margin:0 auto; padding:40px 24px 80px; }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; margin-bottom:8px; }
+    .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:32px; }
+    .search-row { display:flex; gap:10px; margin-bottom:28px; }
+    input[type=text] { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.95rem; padding:12px 16px; outline:none; }
+    input[type=text]:focus { border-color:var(--accent); }
+    .btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:12px 22px; font-family:'Inter',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; transition:opacity 0.2s; white-space:nowrap; }
+    .btn:hover { opacity:0.85; }
+    .ip-hero { text-align:center; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px; margin-bottom:20px; }
+    .ip-label { font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
+    .ip-addr { font-family:'Space Grotesk',sans-serif; font-size:2.2rem; font-weight:700; color:var(--accent2); }
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .info-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; }
+    .info-card .ic-label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+    .info-card .ic-val { font-size:0.95rem; font-weight:600; color:var(--text); }
+    .loading { text-align:center; padding:40px; color:var(--muted); }
+    .error-box { background:#ff6b6b18; border:1px solid #ff6b6b44; border-radius:var(--radius); padding:16px 20px; color:#ff6b6b; font-size:0.9rem; }
+    @media(max-width:500px) { .info-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">Quick<span>FreeTools</span></a>
+  <a class="back" href="/">← All Tools</a>
+</header>
+<main>
+  <h1>🌐 IP Address Lookup</h1>
+  <p class="subtitle">Find your public IP address and geolocation details. You can also look up any IP address.</p>
+
+  <div class="search-row">
+    <input type="text" id="ipInput" placeholder="Enter IP address (leave blank for your IP)">
+    <button class="btn" onclick="lookup()">Lookup</button>
+  </div>
+
+  <div id="result"></div>
+</main>
+
+<script>
+async function lookup() {
+  const ip = document.getElementById('ipInput').value.trim();
+  const url = ip ? `https://ipapi.co/${ip}/json/` : 'https://ipapi.co/json/';
+  document.getElementById('result').innerHTML = '<div class="loading">⏳ Looking up...</div>';
+  try {
+    const res = await fetch(url);
+    const d = await res.json();
+    if (d.error) throw new Error(d.reason || 'Invalid IP');
+    document.getElementById('result').innerHTML = `
+      <div class="ip-hero">
+        <div class="ip-label">IP Address</div>
+        <div class="ip-addr">${d.ip}</div>
+      </div>
+      <div class="info-grid">
+        <div class="info-card"><div class="ic-label">Country</div><div class="ic-val">${d.country_flag_emoji || ''} ${d.country_name || '–'}</div></div>
+        <div class="info-card"><div class="ic-label">Region</div><div class="ic-val">${d.region || '–'}</div></div>
+        <div class="info-card"><div class="ic-label">City</div><div class="ic-val">${d.city || '–'}</div></div>
+        <div class="info-card"><div class="ic-label">Postal Code</div><div class="ic-val">${d.postal || '–'}</div></div>
+        <div class="info-card"><div class="ic-label">Latitude / Longitude</div><div class="ic-val">${d.latitude || '–'}, ${d.longitude || '–'}</div></div>
+        <div class="info-card"><div class="ic-label">Timezone</div><div class="ic-val">${d.timezone || '–'}</div></div>
+        <div class="info-card"><div class="ic-label">ISP / Org</div><div class="ic-val">${d.org || '–'}</div></div>
+        <div class="info-card"><div class="ic-label">ASN</div><div class="ic-val">${d.asn || '–'}</div></div>
+        <div class="info-card"><div class="ic-label">Currency</div><div class="ic-val">${d.currency_name || '–'} (${d.currency || '–'})</div></div>
+        <div class="info-card"><div class="ic-label">Languages</div><div class="ic-val">${d.languages || '–'}</div></div>
+      </div>`;
+  } catch(e) {
+    document.getElementById('result').innerHTML = `<div class="error-box">❌ ${e.message || 'Failed to fetch IP info. Please try again.'}</div>`;
+  }
+}
+
+lookup();
+</script>
+</body>
+</html>

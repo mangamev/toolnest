@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Converter – QuickFreeTools</title>
+  <meta name="description" content="Free online color converter. Convert colors between HEX, RGB, HSL, HSV, CMYK instantly.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f1117; --surface:#181b23; --surface2:#1f2330; --border:#2a2f3e; --accent:#6c63ff; --accent2:#00d4aa; --text:#e8eaf0; --muted:#7a7f96; --radius:12px; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    header { border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; background:rgba(15,17,23,0.95); backdrop-filter:blur(8px); z-index:100; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:1.25rem; font-weight:700; color:var(--text); text-decoration:none; }
+    .logo span { color:var(--accent); }
+    .back { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+    .back:hover { color:var(--text); }
+    main { max-width:700px; margin:0 auto; padding:40px 24px 80px; }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; margin-bottom:8px; }
+    .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:32px; }
+    .color-preview { width:100%; height:120px; border-radius:var(--radius); margin-bottom:24px; border:1px solid var(--border); transition:background 0.2s; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:600; letter-spacing:0.05em; }
+    .input-row { display:flex; gap:12px; align-items:center; margin-bottom:24px; }
+    input[type=color] { width:48px; height:48px; border:none; border-radius:8px; cursor:pointer; background:none; padding:0; }
+    .hex-input { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Inter',sans-serif; font-size:1rem; padding:12px 16px; outline:none; }
+    .hex-input:focus { border-color:var(--accent); }
+    .formats { display:grid; gap:12px; }
+    .format-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; }
+    .format-label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
+    .format-val { font-size:0.95rem; font-weight:600; font-family:monospace; color:var(--accent2); }
+    .copy-btn { background:var(--surface2); border:1px solid var(--border); border-radius:6px; color:var(--muted); font-size:0.78rem; padding:6px 12px; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+    .copy-btn:hover { border-color:var(--accent); color:var(--text); }
+    .swatches { margin-top:28px; }
+    .swatches h3 { font-size:0.82rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; }
+    .swatch-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(60px,1fr)); gap:8px; }
+    .swatch { height:48px; border-radius:8px; cursor:pointer; border:2px solid transparent; transition:transform 0.15s, border-color 0.15s; }
+    .swatch:hover { transform:scale(1.08); border-color:var(--text); }
+  </style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">Quick<span>FreeTools</span></a>
+  <a class="back" href="/">← All Tools</a>
+</header>
+<main>
+  <h1>🎨 Color Converter</h1>
+  <p class="subtitle">Convert colors between HEX, RGB, HSL, HSV and CMYK formats instantly.</p>
+
+  <div class="color-preview" id="preview">#6C63FF</div>
+
+  <div class="input-row">
+    <input type="color" id="colorPicker" value="#6c63ff" oninput="fromPicker()">
+    <input class="hex-input" type="text" id="hexInput" value="#6C63FF" placeholder="#RRGGBB" oninput="fromHex()">
+  </div>
+
+  <div class="formats" id="formats"></div>
+
+  <div class="swatches">
+    <h3>Quick Swatches</h3>
+    <div class="swatch-grid" id="swatches"></div>
+  </div>
+</main>
+
+<script>
+const swatchColors = ['#FF6B6B','#FF8E53','#FFD93D','#6BCB77','#4D96FF','#6C63FF','#C77DFF','#FF006E','#00D4AA','#FB8500','#023E8A','#FFFFFF','#AAAAAA','#555555','#000000','#E63946','#457B9D','#2A9D8F','#E9C46A','#F4A261'];
+
+function hexToRgb(hex) {
+  hex = hex.replace('#','');
+  if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+  const n = parseInt(hex,16);
+  return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
+}
+function rgbToHsl(r,g,b) {
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b);
+  let h,s,l=(max+min)/2;
+  if (max===min) { h=s=0; }
+  else {
+    const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min);
+    switch(max){ case r:h=(g-b)/d+(g<b?6:0);break; case g:h=(b-r)/d+2;break; case b:h=(r-g)/d+4;break; }
+    h/=6;
+  }
+  return { h:Math.round(h*360), s:Math.round(s*100), l:Math.round(l*100) };
+}
+function rgbToHsv(r,g,b) {
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b), d=max-min;
+  let h; const s=max===0?0:d/max, v=max;
+  if (max===min) h=0;
+  else { switch(max){ case r:h=(g-b)/d+(g<b?6:0);break; case g:h=(b-r)/d+2;break; case b:h=(r-g)/d+4;break; } h/=6; }
+  return { h:Math.round(h*360), s:Math.round(s*100), v:Math.round(v*100) };
+}
+function rgbToCmyk(r,g,b) {
+  r/=255; g/=255; b/=255;
+  const k=1-Math.max(r,g,b);
+  if (k===1) return {c:0,m:0,y:0,k:100};
+  return { c:Math.round((1-r-k)/(1-k)*100), m:Math.round((1-g-k)/(1-k)*100), y:Math.round((1-b-k)/(1-k)*100), k:Math.round(k*100) };
+}
+
+function updateAll(hex) {
+  hex = hex.trim();
+  if (!/^#[0-9A-Fa-f]{3,6}$/.test(hex)) return;
+  if (hex.length === 4) hex = '#'+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
+  const {r,g,b} = hexToRgb(hex);
+  const hsl = rgbToHsl(r,g,b);
+  const hsv = rgbToHsv(r,g,b);
+  const cmyk = rgbToCmyk(r,g,b);
+
+  document.getElementById('preview').style.background = hex;
+  document.getElementById('preview').style.color = hsl.l > 55 ? '#000' : '#fff';
+  document.getElementById('preview').textContent = hex.toUpperCase();
+  document.getElementById('colorPicker').value = hex;
+
+  const formats = [
+    { label:'HEX', val: hex.toUpperCase() },
+    { label:'RGB', val: `rgb(${r}, ${g}, ${b})` },
+    { label:'HSL', val: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` },
+    { label:'HSV', val: `hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)` },
+    { label:'CMYK', val: `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)` },
+    { label:'CSS var', val: `--color: ${hex.toUpperCase()};` },
+  ];
+  document.getElementById('formats').innerHTML = formats.map(f=>`
+    <div class="format-card">
+      <div><div class="format-label">${f.label}</div><div class="format-val">${f.val}</div></div>
+      <button class="copy-btn" onclick="copyText('${f.val}',this)">Copy</button>
+    </div>`).join('');
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(()=>{ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy',1500); });
+}
+
+function fromHex() {
+  const val = document.getElementById('hexInput').value.trim();
+  const hex = val.startsWith('#') ? val : '#'+val;
+  updateAll(hex);
+}
+function fromPicker() {
+  const hex = document.getElementById('colorPicker').value;
+  document.getElementById('hexInput').value = hex.toUpperCase();
+  updateAll(hex);
+}
+
+// Swatches
+const sg = document.getElementById('swatches');
+swatchColors.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'swatch';
+  d.style.background = c;
+  d.title = c;
+  d.onclick = () => { document.getElementById('hexInput').value = c; updateAll(c); };
+  sg.appendChild(d);
+});
+
+updateAll('#6C63FF');
+</script>
+</body>
+</html>

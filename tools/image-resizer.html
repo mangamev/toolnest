@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Resizer & Compressor – QuickFreeTools</title>
+  <meta name="description" content="Free online image resizer and compressor. Resize, compress and convert images in your browser. No upload to server.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f1117; --surface:#181b23; --surface2:#1f2330; --border:#2a2f3e; --accent:#6c63ff; --accent2:#00d4aa; --text:#e8eaf0; --muted:#7a7f96; --radius:12px; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    header { border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; background:rgba(15,17,23,0.95); backdrop-filter:blur(8px); z-index:100; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:1.25rem; font-weight:700; color:var(--text); text-decoration:none; }
+    .logo span { color:var(--accent); }
+    .back { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+    .back:hover { color:var(--text); }
+    main { max-width:800px; margin:0 auto; padding:40px 24px 80px; }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; margin-bottom:8px; }
+    .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:32px; }
+    .drop-zone { border:2px dashed var(--border); border-radius:var(--radius); padding:48px; text-align:center; cursor:pointer; transition:border-color 0.2s, background 0.2s; }
+    .drop-zone:hover, .drop-zone.drag-over { border-color:var(--accent); background:rgba(108,99,255,0.05); }
+    .drop-zone p { color:var(--muted); margin-top:8px; font-size:0.9rem; }
+    .drop-icon { font-size:2.5rem; margin-bottom:8px; }
+    .controls { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-top:24px; display:none; }
+    .controls.show { display:block; }
+    .preview-wrap { display:flex; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+    .preview-box { flex:1; min-width:200px; background:var(--surface2); border-radius:8px; padding:12px; text-align:center; }
+    .preview-box img { max-width:100%; max-height:160px; border-radius:6px; object-fit:contain; }
+    .preview-box .label { font-size:0.75rem; color:var(--muted); margin-top:8px; }
+    .options { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+    label { font-size:0.85rem; color:var(--muted); display:block; margin-bottom:6px; }
+    input[type=number], select { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.9rem; padding:10px 12px; outline:none; }
+    input[type=number]:focus, select:focus { border-color:var(--accent); }
+    .quality-row { grid-column:1/-1; }
+    input[type=range] { width:100%; accent-color:var(--accent); }
+    .quality-val { color:var(--accent); font-weight:600; }
+    .lock-ratio { display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--muted); grid-column:1/-1; cursor:pointer; }
+    .lock-ratio input { width:auto; }
+    .btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:12px 28px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:600; cursor:pointer; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.85; }
+    .btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .info-row { display:flex; gap:24px; flex-wrap:wrap; font-size:0.82rem; color:var(--muted); margin-bottom:20px; }
+    .info-row span b { color:var(--text); }
+  </style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">Quick<span>FreeTools</span></a>
+  <a class="back" href="/">← All Tools</a>
+</header>
+<main>
+  <h1>🖼️ Image Resizer & Compressor</h1>
+  <p class="subtitle">Resize and compress images entirely in your browser. Nothing is uploaded to any server.</p>
+
+  <div class="drop-zone" id="dropZone">
+    <div class="drop-icon">📁</div>
+    <strong>Drop an image here</strong>
+    <p>or click to browse (JPG, PNG, WebP, GIF)</p>
+    <input type="file" id="fileInput" accept="image/*" style="display:none">
+  </div>
+
+  <div class="controls" id="controls">
+    <div class="preview-wrap">
+      <div class="preview-box">
+        <img id="previewOrig" src="" alt="Original">
+        <div class="label">Original</div>
+      </div>
+      <div class="preview-box">
+        <img id="previewOut" src="" alt="Output">
+        <div class="label">Output</div>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <span>Original: <b id="origSize">–</b></span>
+      <span>Dimensions: <b id="origDims">–</b></span>
+      <span>Output size: <b id="outSize">–</b></span>
+    </div>
+
+    <div class="options">
+      <div>
+        <label>Width (px)</label>
+        <input type="number" id="widthInput" min="1" max="8000">
+      </div>
+      <div>
+        <label>Height (px)</label>
+        <input type="number" id="heightInput" min="1" max="8000">
+      </div>
+      <label class="lock-ratio">
+        <input type="checkbox" id="lockRatio" checked> Lock aspect ratio
+      </label>
+      <div class="quality-row">
+        <label>Quality: <span class="quality-val" id="qualityVal">85</span>%</label>
+        <input type="range" id="qualityInput" min="1" max="100" value="85">
+      </div>
+      <div>
+        <label>Output format</label>
+        <select id="formatSelect">
+          <option value="image/jpeg">JPEG</option>
+          <option value="image/png">PNG</option>
+          <option value="image/webp">WebP</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn" id="downloadBtn">⬇ Download</button>
+  </div>
+</main>
+
+<script>
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const controls = document.getElementById('controls');
+  const previewOrig = document.getElementById('previewOrig');
+  const previewOut = document.getElementById('previewOut');
+  const widthInput = document.getElementById('widthInput');
+  const heightInput = document.getElementById('heightInput');
+  const lockRatio = document.getElementById('lockRatio');
+  const qualityInput = document.getElementById('qualityInput');
+  const qualityVal = document.getElementById('qualityVal');
+  const formatSelect = document.getElementById('formatSelect');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const origSize = document.getElementById('origSize');
+  const origDims = document.getElementById('origDims');
+  const outSize = document.getElementById('outSize');
+
+  let img = new Image();
+  let origW, origH, origFile;
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); loadFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', () => loadFile(fileInput.files[0]));
+
+  function fmtBytes(b) { return b > 1048576 ? (b/1048576).toFixed(1)+'MB' : (b/1024).toFixed(1)+'KB'; }
+
+  function loadFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    origFile = file;
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      origW = img.naturalWidth; origH = img.naturalHeight;
+      widthInput.value = origW; heightInput.value = origH;
+      previewOrig.src = url;
+      origSize.textContent = fmtBytes(file.size);
+      origDims.textContent = origW + ' × ' + origH;
+      controls.classList.add('show');
+      renderOutput();
+    };
+    img.src = url;
+  }
+
+  function renderOutput() {
+    const w = parseInt(widthInput.value) || origW;
+    const h = parseInt(heightInput.value) || origH;
+    const fmt = formatSelect.value;
+    const q = qualityInput.value / 100;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    const dataUrl = canvas.toDataURL(fmt, q);
+    previewOut.src = dataUrl;
+    const bytes = Math.round((dataUrl.length - 22) * 3 / 4);
+    outSize.textContent = fmtBytes(bytes);
+  }
+
+  widthInput.addEventListener('input', () => {
+    if (lockRatio.checked && origW) heightInput.value = Math.round(widthInput.value * origH / origW);
+    renderOutput();
+  });
+  heightInput.addEventListener('input', () => {
+    if (lockRatio.checked && origH) widthInput.value = Math.round(heightInput.value * origW / origH);
+    renderOutput();
+  });
+  qualityInput.addEventListener('input', () => { qualityVal.textContent = qualityInput.value; renderOutput(); });
+  formatSelect.addEventListener('change', renderOutput);
+
+  downloadBtn.addEventListener('click', () => {
+    const w = parseInt(widthInput.value) || origW;
+    const h = parseInt(heightInput.value) || origH;
+    const fmt = formatSelect.value;
+    const q = qualityInput.value / 100;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    const ext = fmt.split('/')[1];
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL(fmt, q);
+    a.download = 'resized.' + ext;
+    a.click();
+  });
+</script>
+</body>
+</html>

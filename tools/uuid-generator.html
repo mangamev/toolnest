@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UUID Generator – QuickFreeTools</title>
+  <meta name="description" content="Free online UUID generator. Generate UUID v1, v4 and ULID instantly in your browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f1117; --surface:#181b23; --surface2:#1f2330; --border:#2a2f3e; --accent:#6c63ff; --accent2:#00d4aa; --text:#e8eaf0; --muted:#7a7f96; --radius:12px; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    header { border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; background:rgba(15,17,23,0.95); backdrop-filter:blur(8px); z-index:100; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:1.25rem; font-weight:700; color:var(--text); text-decoration:none; }
+    .logo span { color:var(--accent); }
+    .back { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+    .back:hover { color:var(--text); }
+    main { max-width:700px; margin:0 auto; padding:40px 24px 80px; }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; margin-bottom:8px; }
+    .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:32px; }
+    .controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:24px; }
+    select, input[type=number] { background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.9rem; padding:10px 14px; outline:none; }
+    select:focus, input[type=number]:focus { border-color:var(--accent); }
+    input[type=number] { width:90px; }
+    .btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 22px; font-family:'Inter',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.85; }
+    .btn-outline { background:transparent; border:1px solid var(--border); color:var(--muted); }
+    .btn-outline:hover { border-color:var(--accent); color:var(--text); opacity:1; }
+    .uuid-list { display:flex; flex-direction:column; gap:8px; }
+    .uuid-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .uuid-val { font-family:monospace; font-size:0.95rem; color:var(--accent2); word-break:break-all; }
+    .copy-btn { background:var(--surface2); border:1px solid var(--border); border-radius:6px; color:var(--muted); font-size:0.78rem; padding:6px 12px; cursor:pointer; white-space:nowrap; transition:all 0.2s; flex-shrink:0; }
+    .copy-btn:hover { border-color:var(--accent); color:var(--text); }
+    .copy-all-row { display:flex; justify-content:flex-end; margin-bottom:12px; }
+    .info-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-top:32px; }
+    .info-box h3 { font-size:0.95rem; margin-bottom:12px; color:var(--accent); }
+    .info-box p { font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:8px; }
+  </style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">Quick<span>FreeTools</span></a>
+  <a class="back" href="/">← All Tools</a>
+</header>
+<main>
+  <h1>🆔 UUID Generator</h1>
+  <p class="subtitle">Generate UUID v4 (random) instantly in your browser. No server, no logging.</p>
+
+  <div class="controls">
+    <select id="version">
+      <option value="v4">UUID v4 (random)</option>
+      <option value="v1sim">UUID v1-style (time-based sim)</option>
+      <option value="nil">Nil UUID</option>
+    </select>
+    <input type="number" id="count" value="5" min="1" max="100">
+    <button class="btn" onclick="generateAll()">Generate</button>
+  </div>
+
+  <div class="copy-all-row">
+    <button class="btn btn-outline" onclick="copyAll()">Copy All</button>
+  </div>
+
+  <div class="uuid-list" id="list"></div>
+
+  <div class="info-box">
+    <h3>What is a UUID?</h3>
+    <p><strong>UUID v4</strong> is randomly generated using a cryptographically secure random number generator. Collision probability is astronomically low, making them safe for use as unique identifiers in databases and distributed systems.</p>
+    <p><strong>UUID v1</strong> is time-based — it encodes the current timestamp. The v1 generated here is a simulation (uses random + timestamp) since true v1 requires a MAC address.</p>
+    <p><strong>Nil UUID</strong>: <code style="color:var(--accent2)">00000000-0000-0000-0000-000000000000</code> — used as a null value.</p>
+  </div>
+</main>
+
+<script>
+function uuidV4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function uuidV1sim() {
+  const now = Date.now();
+  const timeHigh = Math.floor(now / 0x100000000);
+  const timeLow = now & 0xFFFFFFFF;
+  const rand = () => Math.floor(Math.random()*0x10000).toString(16).padStart(4,'0');
+  const tl = timeLow.toString(16).padStart(8,'0');
+  const tm = rand();
+  const th = (0x1000 | (timeHigh & 0x0FFF)).toString(16);
+  const cs = (0x8000 | (Math.floor(Math.random()*0x3FFF))).toString(16);
+  const node = Array.from({length:6},()=>Math.floor(Math.random()*256).toString(16).padStart(2,'0')).join('');
+  return `${tl}-${tm}-${th}-${cs}-${node}`;
+}
+
+function nilUuid() { return '00000000-0000-0000-0000-000000000000'; }
+
+let generated = [];
+
+function generateAll() {
+  const ver = document.getElementById('version').value;
+  const n = Math.min(100, Math.max(1, parseInt(document.getElementById('count').value)||1));
+  generated = Array.from({length:n}, () =>
+    ver==='v4' ? uuidV4() : ver==='v1sim' ? uuidV1sim() : nilUuid()
+  );
+  render();
+}
+
+function render() {
+  document.getElementById('list').innerHTML = generated.map(u=>`
+    <div class="uuid-item">
+      <span class="uuid-val">${u}</span>
+      <button class="copy-btn" onclick="copyOne('${u}',this)">Copy</button>
+    </div>`).join('');
+}
+
+function copyOne(text, btn) {
+  navigator.clipboard.writeText(text).then(()=>{ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy',1500); });
+}
+
+function copyAll() {
+  navigator.clipboard.writeText(generated.join('\n'));
+}
+
+generateAll();
+</script>
+</body>
+</html>

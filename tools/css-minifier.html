@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS & JS Minifier – QuickFreeTools</title>
+  <meta name="description" content="Free online CSS and JavaScript minifier. Minify your code in the browser instantly, no upload required.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f1117; --surface:#181b23; --surface2:#1f2330; --border:#2a2f3e; --accent:#6c63ff; --accent2:#00d4aa; --text:#e8eaf0; --muted:#7a7f96; --radius:12px; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    header { border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; background:rgba(15,17,23,0.95); backdrop-filter:blur(8px); z-index:100; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:1.25rem; font-weight:700; color:var(--text); text-decoration:none; }
+    .logo span { color:var(--accent); }
+    .back { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+    .back:hover { color:var(--text); }
+    main { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; margin-bottom:8px; }
+    .subtitle { color:var(--muted); font-size:0.9rem; margin-bottom:24px; }
+    .tabs { display:flex; gap:8px; margin-bottom:20px; }
+    .tab { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:6px 18px; font-size:0.85rem; cursor:pointer; color:var(--muted); transition:all 0.2s; }
+    .tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .editor-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .editor-panel { display:flex; flex-direction:column; gap:8px; }
+    .panel-label { font-size:0.82rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+    textarea { width:100%; height:320px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-family:'JetBrains Mono','Fira Code',monospace; font-size:0.82rem; padding:16px; resize:vertical; outline:none; line-height:1.6; }
+    textarea:focus { border-color:var(--accent); }
+    .action-row { display:flex; gap:10px; align-items:center; margin:16px 0; flex-wrap:wrap; }
+    .btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 24px; font-family:'Inter',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.85; }
+    .btn-outline { background:transparent; border:1px solid var(--border); color:var(--muted); }
+    .btn-outline:hover { border-color:var(--accent); color:var(--text); opacity:1; }
+    .stats { display:flex; gap:20px; flex-wrap:wrap; font-size:0.82rem; color:var(--muted); margin-top:12px; }
+    .stats span b { color:var(--accent2); }
+    .saving { color:var(--accent2); font-weight:600; }
+    @media(max-width:640px) { .editor-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">Quick<span>FreeTools</span></a>
+  <a class="back" href="/">← All Tools</a>
+</header>
+<main>
+  <h1>🗜️ CSS & JS Minifier</h1>
+  <p class="subtitle">Minify CSS or JavaScript code in your browser. No upload, no server processing.</p>
+
+  <div class="tabs">
+    <div class="tab active" onclick="setMode('css',this)">CSS</div>
+    <div class="tab" onclick="setMode('js',this)">JavaScript</div>
+  </div>
+
+  <div class="editor-grid">
+    <div class="editor-panel">
+      <div class="panel-label">Input</div>
+      <textarea id="input" placeholder="Paste your CSS or JS here..." oninput="autoMinify()"></textarea>
+    </div>
+    <div class="editor-panel">
+      <div class="panel-label">Minified Output</div>
+      <textarea id="output" readonly placeholder="Minified code appears here..."></textarea>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="btn" onclick="minify()">Minify</button>
+    <button class="btn btn-outline" onclick="copyOutput()">Copy Output</button>
+    <button class="btn btn-outline" onclick="clearAll()">Clear</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+</main>
+
+<script>
+let mode = 'css';
+
+function setMode(m, el) {
+  mode = m;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('input').placeholder = `Paste your ${m.toUpperCase()} here...`;
+  minify();
+}
+
+function minifyCSS(code) {
+  return code
+    .replace(/\/\*[\s\S]*?\*\//g, '')        // remove comments
+    .replace(/\s*([{}:;,>~+])\s*/g, '$1')    // remove spaces around symbols
+    .replace(/\s+/g, ' ')                     // collapse whitespace
+    .replace(/;\}/g, '}')                     // remove last semicolon in block
+    .replace(/:\s+/g, ':')                    // remove space after colon
+    .trim();
+}
+
+function minifyJS(code) {
+  // Basic JS minification (not a full parser)
+  return code
+    .replace(/\/\/[^\n]*/g, '')              // remove // comments
+    .replace(/\/\*[\s\S]*?\*\//g, '')        // remove /* */ comments
+    .replace(/\n\s*\n/g, '\n')               // collapse blank lines
+    .replace(/[ \t]+/g, ' ')                 // collapse spaces/tabs
+    .replace(/\n /g, '\n')                   // trim leading space on lines
+    .replace(/ \n/g, '\n')                   // trim trailing space on lines
+    .replace(/\n/g, '')                      // collapse newlines
+    .replace(/ ([=!<>+\-*\/&|?:,;{}()\[\]])/g, '$1')  // remove space before operators
+    .replace(/([=!<>+\-*\/&|?:,;{}()\[\]]) /g, '$1')  // remove space after operators
+    .trim();
+}
+
+function minify() {
+  const input = document.getElementById('input').value;
+  if (!input.trim()) { document.getElementById('output').value = ''; updateStats('',''); return; }
+  const out = mode === 'css' ? minifyCSS(input) : minifyJS(input);
+  document.getElementById('output').value = out;
+  updateStats(input, out);
+}
+
+function autoMinify() { minify(); }
+
+function updateStats(input, out) {
+  const ib = new Blob([input]).size;
+  const ob = new Blob([out]).size;
+  const saved = ib ? Math.round((1 - ob/ib)*100) : 0;
+  document.getElementById('stats').innerHTML = ib ? `
+    <span>Original: <b>${fmtBytes(ib)}</b></span>
+    <span>Minified: <b>${fmtBytes(ob)}</b></span>
+    <span class="saving">Saved: ${saved}%</span>` : '';
+}
+
+function fmtBytes(b) { return b > 1024 ? (b/1024).toFixed(1)+'KB' : b+'B'; }
+
+function copyOutput() {
+  const out = document.getElementById('output').value;
+  if (!out) return;
+  navigator.clipboard.writeText(out);
+}
+
+function clearAll() {
+  document.getElementById('input').value = '';
+  document.getElementById('output').value = '';
+  document.getElementById('stats').innerHTML = '';
+}
+</script>
+</body>
+</html>
