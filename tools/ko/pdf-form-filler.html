@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 온라인 PDF 양식 작성 도구. 입력 가능한 PDF의 텍스트 필드, 체크박스, 드롭다운, 라디오 버튼을 채우고 바로 다운로드하세요. 브라우저에서만 동작합니다.">
+  <title>PDF 양식 채우기 – 무료 온라인 PDF 양식 작성 도구 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    input[type="file"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; padding: 10px 12px; }
+    input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; margin-right: 10px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+    .field-row { margin-bottom: 14px; }
+    .field-row label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+    .field-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; }
+    .checkbox-row label { margin: 0; color: var(--text); font-size: 0.85rem; }
+    .note { color: var(--muted); font-size: 0.8rem; line-height: 1.6; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/pdf-form-filler.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">PDF 양식 채우기</h1>
+  <p class="tool-desc">입력 가능한 PDF를 업로드하고 텍스트 필드, 체크박스, 드롭다운, 라디오 버튼을 채운 뒤 완성된 파일을 다운로드하세요. 모든 처리는 브라우저에서 실행됩니다.</p>
+
+  <div class="card">
+    <label class="label">PDF 업로드</label>
+    <input type="file" id="fileInput" accept="application/pdf">
+  </div>
+
+  <div class="card" id="formCard" style="display:none;">
+    <label class="label">양식 필드 (<span id="fieldTotal">0</span>)</label>
+    <div id="fieldsContainer"></div>
+
+    <div class="checkbox-row" style="margin-top:10px;">
+      <input type="checkbox" id="flattenChk">
+      <label for="flattenChk">작성 후 양식 평면화 (필드를 읽기 전용으로 만듦)</label>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="fillAndDownload()">작성 완료 & PDF 다운로드</button>
+    </div>
+    <div class="output" id="output" style="display:none;"></div>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+let pdfBytes = null;
+let fieldEntries = []; // { name, type, el }
+
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    pdfBytes = await file.arrayBuffer();
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    const form = doc.getForm();
+    const fields = form.getFields();
+    buildFields(fields);
+    document.getElementById('formCard').style.display = 'block';
+    document.getElementById('output').style.display = 'none';
+  } catch (err) {
+    pdfBytes = null;
+    showToast('PDF 파일을 읽을 수 없습니다');
+  }
+});
+
+function buildFields(fields) {
+  const { PDFTextField, PDFCheckBox, PDFDropdown, PDFOptionList, PDFRadioGroup } = PDFLib;
+  const container = document.getElementById('fieldsContainer');
+  container.innerHTML = '';
+  fieldEntries = [];
+
+  fields.forEach(field => {
+    const name = field.getName();
+    const row = document.createElement('div');
+    row.className = 'field-row';
+    const label = document.createElement('label');
+    label.textContent = name;
+
+    if (field instanceof PDFTextField) {
+      row.appendChild(label);
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = field.getText() || '';
+      row.appendChild(input);
+      fieldEntries.push({ name, type: 'text', el: input });
+    } else if (field instanceof PDFCheckBox) {
+      const wrap = document.createElement('div');
+      wrap.className = 'checkbox-row';
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = 'chk_' + name.replace(/[^a-zA-Z0-9]/g, '_');
+      input.checked = field.isChecked();
+      const lbl = document.createElement('label');
+      lbl.htmlFor = input.id;
+      lbl.textContent = name;
+      wrap.appendChild(input);
+      wrap.appendChild(lbl);
+      row.appendChild(wrap);
+      fieldEntries.push({ name, type: 'checkbox', el: input });
+    } else if (field instanceof PDFRadioGroup) {
+      row.appendChild(label);
+      const select = document.createElement('select');
+      const selected = field.getSelected();
+      field.getOptions().forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt; o.textContent = opt;
+        if (opt === selected) o.selected = true;
+        select.appendChild(o);
+      });
+      row.appendChild(select);
+      fieldEntries.push({ name, type: 'radio', el: select });
+    } else if (field instanceof PDFDropdown) {
+      row.appendChild(label);
+      const select = document.createElement('select');
+      const selected = field.getSelected();
+      field.getOptions().forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt; o.textContent = opt;
+        if (selected.includes(opt)) o.selected = true;
+        select.appendChild(o);
+      });
+      row.appendChild(select);
+      fieldEntries.push({ name, type: 'dropdown', el: select });
+    } else if (field instanceof PDFOptionList) {
+      row.appendChild(label);
+      const select = document.createElement('select');
+      select.multiple = true;
+      const selected = field.getSelected();
+      field.getOptions().forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt; o.textContent = opt;
+        if (selected.includes(opt)) o.selected = true;
+        select.appendChild(o);
+      });
+      row.appendChild(select);
+      fieldEntries.push({ name, type: 'optionlist', el: select });
+    } else {
+      return;
+    }
+    container.appendChild(row);
+  });
+
+  document.getElementById('fieldTotal').textContent = fieldEntries.length;
+  if (fieldEntries.length === 0) {
+    container.innerHTML = '<p class="note">이 PDF에는 입력 가능한 양식 필드가 없습니다.</p>';
+  }
+}
+
+async function fillAndDownload() {
+  if (!pdfBytes) { showToast('먼저 PDF를 업로드하세요'); return; }
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.style.color = 'var(--accent2)';
+  out.textContent = '처리 중...';
+
+  try {
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    const form = doc.getForm();
+
+    fieldEntries.forEach(entry => {
+      if (entry.type === 'text') {
+        form.getTextField(entry.name).setText(entry.el.value);
+      } else if (entry.type === 'checkbox') {
+        const cb = form.getCheckBox(entry.name);
+        entry.el.checked ? cb.check() : cb.uncheck();
+      } else if (entry.type === 'radio') {
+        if (entry.el.value) form.getRadioGroup(entry.name).select(entry.el.value);
+      } else if (entry.type === 'dropdown') {
+        if (entry.el.value) form.getDropdown(entry.name).select(entry.el.value);
+      } else if (entry.type === 'optionlist') {
+        const values = [...entry.el.selectedOptions].map(o => o.value);
+        if (values.length) form.getOptionList(entry.name).select(values);
+      }
+    });
+
+    if (document.getElementById('flattenChk').checked) {
+      form.flatten();
+    }
+
+    const outBytes = await doc.save();
+    const blob = new Blob([outBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'filled.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    out.textContent = '완료! 양식을 작성한 PDF를 다운로드했습니다.';
+    showToast('PDF가 다운로드되었습니다');
+  } catch (err) {
+    out.style.color = '#ff6b6b';
+    out.textContent = '오류: ' + err.message;
+  }
+}
+</script>
+</body></html>

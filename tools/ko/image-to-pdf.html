@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 온라인 이미지 → PDF 변환기. JPG, PNG 이미지를 하나의 PDF로 합치고 순서와 페이지 크기를 조절한 뒤 다운로드하세요. 브라우저에서만 동작합니다.">
+  <title>이미지를 PDF로 변환 – 무료 온라인 JPG/PNG → PDF 변환기 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    input[type="file"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; padding: 10px 12px; }
+    input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; margin-right: 10px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+    .img-list { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow-y: auto; margin-top: 12px; }
+    .img-row { display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 0.8rem; }
+    .img-row img { width: 36px; height: 36px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: #fff; }
+    .img-row .iname { flex: 1; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .icon-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; }
+    .icon-btn:hover { border-color: var(--accent); }
+    .note { color: var(--muted); font-size: 0.8rem; line-height: 1.6; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/image-to-pdf.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">이미지를 PDF로 변환</h1>
+  <p class="tool-desc">JPG, PNG 이미지를 하나의 PDF로 합치세요. 이미지 순서를 바꾸고 페이지 크기를 선택한 뒤 다운로드하세요 — 모든 처리는 브라우저에서 실행됩니다.</p>
+
+  <div class="card">
+    <label class="label">이미지 업로드 (JPG / PNG)</label>
+    <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple>
+  </div>
+
+  <div class="card" id="listCard" style="display:none;">
+    <label class="label">이미지 (<span id="imgTotal">0</span>)</label>
+    <div class="img-list" id="imgList"></div>
+
+    <label class="label">페이지 크기</label>
+    <select id="pageSizeSel">
+      <option value="fit">이미지에 맞춤 (각 페이지가 이미지 크기와 동일)</option>
+      <option value="a4">A4</option>
+      <option value="letter">Letter</option>
+    </select>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="convert()">PDF로 변환 & 다운로드</button>
+    </div>
+    <div class="output" id="output" style="display:none;"></div>
+    <p class="note">↑/↓로 PDF에 들어갈 이미지 순서를 바꿉니다. ✕는 이미지를 제거합니다. A4/Letter를 선택하면 약간의 여백과 함께 이미지가 페이지에 맞게 축소되고, 방향은 이미지의 가로/세로 비율을 따릅니다.</p>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+let images = []; // { file, url }
+
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  const files = [...e.target.files];
+  files.forEach(file => images.push({ file, url: URL.createObjectURL(file) }));
+  document.getElementById('listCard').style.display = images.length ? 'block' : 'none';
+  document.getElementById('output').style.display = 'none';
+  renderList();
+  e.target.value = '';
+});
+
+function renderList() {
+  const container = document.getElementById('imgList');
+  document.getElementById('imgTotal').textContent = images.length;
+  container.innerHTML = '';
+  images.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'img-row';
+
+    const img = document.createElement('img');
+    img.src = item.url;
+    row.appendChild(img);
+
+    const name = document.createElement('div');
+    name.className = 'iname';
+    name.textContent = item.file.name;
+    row.appendChild(name);
+
+    row.appendChild(makeBtn('↑', () => { if (i > 0) { [images[i-1], images[i]] = [images[i], images[i-1]]; renderList(); } }));
+    row.appendChild(makeBtn('↓', () => { if (i < images.length-1) { [images[i+1], images[i]] = [images[i], images[i+1]]; renderList(); } }));
+    row.appendChild(makeBtn('✕', () => { images.splice(i, 1); document.getElementById('listCard').style.display = images.length ? 'block' : 'none'; renderList(); }));
+
+    container.appendChild(row);
+  });
+}
+
+function makeBtn(label, onClick) {
+  const b = document.createElement('button');
+  b.className = 'icon-btn';
+  b.textContent = label;
+  b.onclick = onClick;
+  return b;
+}
+
+const PAGE_SIZES = { a4: [595.28, 841.89], letter: [612, 792] };
+
+async function convert() {
+  if (!images.length) { showToast('이미지를 1개 이상 추가하세요'); return; }
+  const sizeOpt = document.getElementById('pageSizeSel').value;
+
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.style.color = 'var(--accent2)';
+  out.textContent = '처리 중...';
+
+  try {
+    const doc = await PDFLib.PDFDocument.create();
+    for (const item of images) {
+      const bytes = await item.file.arrayBuffer();
+      let img;
+      if (item.file.type === 'image/png') img = await doc.embedPng(bytes);
+      else img = await doc.embedJpg(bytes);
+
+      const { width: iw, height: ih } = img.size();
+
+      if (sizeOpt === 'fit') {
+        const page = doc.addPage([iw, ih]);
+        page.drawImage(img, { x: 0, y: 0, width: iw, height: ih });
+      } else {
+        let [pw, ph] = PAGE_SIZES[sizeOpt];
+        if (iw > ih) [pw, ph] = [ph, pw];
+        const margin = 24;
+        const scale = Math.min((pw - margin*2) / iw, (ph - margin*2) / ih);
+        const w = iw * scale, h = ih * scale;
+        const page = doc.addPage([pw, ph]);
+        page.drawImage(img, { x: (pw - w) / 2, y: (ph - h) / 2, width: w, height: h });
+      }
+    }
+
+    const outBytes = await doc.save();
+    const blob = new Blob([outBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'images.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    out.textContent = '완료! ' + images.length + '개의 이미지를 변환하여 다운로드했습니다.';
+    showToast('PDF가 다운로드되었습니다');
+  } catch (err) {
+    out.style.color = '#ff6b6b';
+    out.textContent = '오류: ' + err.message;
+  }
+}
+</script>
+</body></html>
