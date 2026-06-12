@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="무료 온라인 PDF 여백 자르기 도구. PDF의 모든 페이지에서 불필요한 여백이나 흰 공간을 잘라내고 바로 다운로드하세요. 브라우저에서만 동작하여 안전합니다.">
+  <title>PDF 여백 자르기 – 무료 온라인 PDF 페이지 자르기 도구 | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    input[type="file"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; padding: 10px 12px; }
+    input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; margin-right: 10px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+    .preview-wrap { display: flex; justify-content: center; margin: 16px 0; }
+    .preview-page { position: relative; width: 100%; max-width: 280px; background: #fff; border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+    .preview-crop { position: absolute; border: 2px dashed var(--accent2); background: rgba(0,212,170,0.08); border-radius: 2px; }
+    .note { color: var(--muted); font-size: 0.8rem; line-height: 1.6; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/tools/ko/">← 전체 도구</a><a href="/tools/pdf-margin-cropper.html">English</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">PDF 여백 자르기</h1>
+  <p class="tool-desc">PDF의 모든 페이지에서 불필요한 여백이나 흰 공간을 잘라내세요. 위/아래/왼쪽/오른쪽을 각각 조절하면서 실시간 미리보기로 확인하고, 잘라낸 파일을 바로 다운로드할 수 있습니다. 모든 처리는 브라우저에서 실행되며 파일은 서버로 전송되지 않습니다.</p>
+
+  <div class="card">
+    <label class="label">PDF 업로드</label>
+    <input type="file" id="fileInput" accept="application/pdf">
+    <div class="stat-row" id="fileInfo" style="display:none;">
+      <div class="stat"><strong id="pageCount">-</strong>페이지 수</div>
+      <div class="stat"><strong id="pageSize">-</strong>페이지 크기 (pt)</div>
+    </div>
+  </div>
+
+  <div class="card" id="cropCard" style="display:none;">
+    <label class="label">자를 여백 (페이지 크기 비율, %)</label>
+    <div class="row">
+      <div>
+        <label class="label">위</label>
+        <input type="number" id="mTop" min="0" max="45" step="0.5" value="5">
+      </div>
+      <div>
+        <label class="label">아래</label>
+        <input type="number" id="mBottom" min="0" max="45" step="0.5" value="5">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label class="label">왼쪽</label>
+        <input type="number" id="mLeft" min="0" max="45" step="0.5" value="5">
+      </div>
+      <div>
+        <label class="label">오른쪽</label>
+        <input type="number" id="mRight" min="0" max="45" step="0.5" value="5">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="setAllMargins(0)">0%</button>
+      <button class="btn btn-secondary" onclick="setAllMargins(2)">2%</button>
+      <button class="btn btn-secondary" onclick="setAllMargins(5)">5%</button>
+      <button class="btn btn-secondary" onclick="setAllMargins(10)">10%</button>
+    </div>
+
+    <label class="label">미리보기 (1페이지)</label>
+    <div class="preview-wrap">
+      <div class="preview-page" id="previewPage">
+        <div class="preview-crop" id="previewCrop"></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="cropPdf()">자르고 PDF 다운로드</button>
+    </div>
+    <div class="output" id="output" style="display:none;"></div>
+
+    <p class="note">여백은 각 방향의 페이지 크기에 대한 비율(%)로 잘리므로 어떤 크기의 페이지에도 적용됩니다. 동일한 여백이 <strong>모든 페이지</strong>에 적용됩니다. 빠르고 무손실 방식으로 잘리며, 새 경계 바깥의 내용은 다시 그리지 않고 단순히 숨겨집니다.</p>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p></footer>
+<div id="toast">복사됨!</div>
+<script src="/tools/common.js"></script>
+<script>
+let pdfBytes = null;
+let pageSize = { width: 612, height: 792 };
+
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    pdfBytes = await file.arrayBuffer();
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    const pages = doc.getPages();
+    pageSize = pages[0].getSize();
+    document.getElementById('pageCount').textContent = pages.length;
+    document.getElementById('pageSize').textContent = Math.round(pageSize.width) + ' × ' + Math.round(pageSize.height);
+    document.getElementById('fileInfo').style.display = 'flex';
+    document.getElementById('cropCard').style.display = 'block';
+    document.getElementById('output').style.display = 'none';
+    updatePreview();
+  } catch (err) {
+    pdfBytes = null;
+    showToast('PDF 파일을 읽을 수 없습니다');
+  }
+});
+
+['mTop', 'mBottom', 'mLeft', 'mRight'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updatePreview);
+});
+
+function setAllMargins(v) {
+  ['mTop', 'mBottom', 'mLeft', 'mRight'].forEach(id => document.getElementById(id).value = v);
+  updatePreview();
+}
+
+function getMargins() {
+  return {
+    top: parseFloat(document.getElementById('mTop').value) || 0,
+    bottom: parseFloat(document.getElementById('mBottom').value) || 0,
+    left: parseFloat(document.getElementById('mLeft').value) || 0,
+    right: parseFloat(document.getElementById('mRight').value) || 0
+  };
+}
+
+function updatePreview() {
+  const m = getMargins();
+  const page = document.getElementById('previewPage');
+  const crop = document.getElementById('previewCrop');
+  page.style.aspectRatio = pageSize.width + ' / ' + pageSize.height;
+  crop.style.top = m.top + '%';
+  crop.style.bottom = m.bottom + '%';
+  crop.style.left = m.left + '%';
+  crop.style.right = m.right + '%';
+}
+
+async function cropPdf() {
+  if (!pdfBytes) { showToast('먼저 PDF를 업로드하세요'); return; }
+  const m = getMargins();
+  if (m.top + m.bottom >= 100 || m.left + m.right >= 100) {
+    showToast('여백 값이 너무 큽니다');
+    return;
+  }
+
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.style.color = 'var(--accent2)';
+  out.textContent = '처리 중...';
+
+  try {
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    const pages = doc.getPages();
+    pages.forEach(page => {
+      const { width, height } = page.getSize();
+      const left = width * m.left / 100;
+      const right = width * m.right / 100;
+      const top = height * m.top / 100;
+      const bottom = height * m.bottom / 100;
+      const newW = width - left - right;
+      const newH = height - top - bottom;
+      page.setCropBox(left, bottom, newW, newH);
+      page.setMediaBox(left, bottom, newW, newH);
+    });
+
+    const outBytes = await doc.save();
+    const blob = new Blob([outBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cropped.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    out.textContent = '완료! ' + pages.length + '페이지가 잘려서 다운로드되었습니다.';
+    showToast('자른 PDF가 다운로드되었습니다');
+  } catch (err) {
+    out.style.color = '#ff6b6b';
+    out.textContent = '오류: ' + err.message;
+  }
+}
+</script>
+</body></html>
