@@ -44,6 +44,11 @@
 
   <!-- PDF 도구 -->
   <url><loc>https://quickfreetools.app/tools/pdf-margin-cropper.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/pdf-organizer.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/pdf-watermark.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/image-to-pdf.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/pdf-form-filler.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/pdf-compress.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
 
   <!-- 한국어 도구 -->
   <url><loc>https://quickfreetools.app/tools/ko/word-counter.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
@@ -70,6 +75,11 @@
   <url><loc>https://quickfreetools.app/tools/ko/char-frequency.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
   <url><loc>https://quickfreetools.app/tools/ko/css-gradient.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
   <url><loc>https://quickfreetools.app/tools/ko/pdf-margin-cropper.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/pdf-organizer.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/pdf-watermark.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/image-to-pdf.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/pdf-form-filler.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ko/pdf-compress.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
 
   <!-- 공통 -->
   <url><loc>https://quickfreetools.app/about.html</loc><lastmod>2025-01-01</lastmod><priority>0.5</priority></url>
