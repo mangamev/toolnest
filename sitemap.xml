@@ -33,6 +33,15 @@
   <url><loc>https://quickfreetools.app/tools/roman-numeral.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
   <url><loc>https://quickfreetools.app/tools/char-frequency.html</loc><lastmod>2025-01-01</lastmod><priority>0.8</priority></url>
 
+  <!-- 유틸리티 도구 -->
+  <url><loc>https://quickfreetools.app/tools/image-resizer.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/unit-converter.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/color-converter.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/uuid-generator.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/ip-lookup.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/css-minifier.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://quickfreetools.app/tools/http-status.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
+
   <!-- PDF 도구 -->
   <url><loc>https://quickfreetools.app/tools/pdf-margin-cropper.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
 
