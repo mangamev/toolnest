@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5J4F47ZVP3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5J4F47ZVP3');</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online PDF margin cropper. Trim white space and margins from every page of a PDF directly in your browser. No upload, no signup, 100% private.">
+  <title>PDF Margin Cropper – Trim PDF Page Margins Online | QuickFreeTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tools/common.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    input[type="file"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; padding: 10px 12px; }
+    input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; margin-right: 10px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+    .preview-wrap { display: flex; justify-content: center; margin: 16px 0; }
+    .preview-page { position: relative; width: 100%; max-width: 280px; background: #fff; border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+    .preview-crop { position: absolute; border: 2px dashed var(--accent2); background: rgba(0,212,170,0.08); border-radius: 2px; }
+    .note { color: var(--muted); font-size: 0.8rem; line-height: 1.6; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<header><a class="logo" href="/">Quick<span>FreeTools</span></a><nav class="nav-links"><a href="/">← All Tools</a></nav></header>
+<div class="tool-container">
+  <h1 class="tool-title">PDF Margin Cropper</h1>
+  <p class="tool-desc">Trim white space or margins from every page of a PDF. Adjust each side independently with a live preview, then download the cropped file. Everything runs locally in your browser — nothing is uploaded.</p>
+
+  <div class="card">
+    <label class="label">Upload PDF</label>
+    <input type="file" id="fileInput" accept="application/pdf">
+    <div class="stat-row" id="fileInfo" style="display:none;">
+      <div class="stat"><strong id="pageCount">-</strong>Pages</div>
+      <div class="stat"><strong id="pageSize">-</strong>Page size (pt)</div>
+    </div>
+  </div>
+
+  <div class="card" id="cropCard" style="display:none;">
+    <label class="label">Crop margins (% of page size)</label>
+    <div class="row">
+      <div>
+        <label class="label">Top</label>
+        <input type="number" id="mTop" min="0" max="45" step="0.5" value="5">
+      </div>
+      <div>
+        <label class="label">Bottom</label>
+        <input type="number" id="mBottom" min="0" max="45" step="0.5" value="5">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label class="label">Left</label>
+        <input type="number" id="mLeft" min="0" max="45" step="0.5" value="5">
+      </div>
+      <div>
+        <label class="label">Right</label>
+        <input type="number" id="mRight" min="0" max="45" step="0.5" value="5">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="setAllMargins(0)">None</button>
+      <button class="btn btn-secondary" onclick="setAllMargins(2)">2%</button>
+      <button class="btn btn-secondary" onclick="setAllMargins(5)">5%</button>
+      <button class="btn btn-secondary" onclick="setAllMargins(10)">10%</button>
+    </div>
+
+    <label class="label">Preview (page 1)</label>
+    <div class="preview-wrap">
+      <div class="preview-page" id="previewPage">
+        <div class="preview-crop" id="previewCrop"></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="cropPdf()">Crop & Download PDF</button>
+    </div>
+    <div class="output" id="output" style="display:none;"></div>
+
+    <p class="note">Margins are cropped from each side as a percentage of the page size, so it works for pages of any size. The same crop is applied to <strong>all pages</strong>. This is a fast, lossless crop — page content outside the new boundary is simply hidden, not re-rendered.</p>
+  </div>
+</div>
+<footer><p>© 2025 QuickFreeTools · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p></footer>
+<div id="toast">Copied!</div>
+<script src="/tools/common.js"></script>
+<script>
+let pdfBytes = null;
+let pageSize = { width: 612, height: 792 };
+
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    pdfBytes = await file.arrayBuffer();
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    const pages = doc.getPages();
+    pageSize = pages[0].getSize();
+    document.getElementById('pageCount').textContent = pages.length;
+    document.getElementById('pageSize').textContent = Math.round(pageSize.width) + ' × ' + Math.round(pageSize.height);
+    document.getElementById('fileInfo').style.display = 'flex';
+    document.getElementById('cropCard').style.display = 'block';
+    document.getElementById('output').style.display = 'none';
+    updatePreview();
+  } catch (err) {
+    pdfBytes = null;
+    showToast('Could not read this PDF');
+  }
+});
+
+['mTop', 'mBottom', 'mLeft', 'mRight'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updatePreview);
+});
+
+function setAllMargins(v) {
+  ['mTop', 'mBottom', 'mLeft', 'mRight'].forEach(id => document.getElementById(id).value = v);
+  updatePreview();
+}
+
+function getMargins() {
+  return {
+    top: parseFloat(document.getElementById('mTop').value) || 0,
+    bottom: parseFloat(document.getElementById('mBottom').value) || 0,
+    left: parseFloat(document.getElementById('mLeft').value) || 0,
+    right: parseFloat(document.getElementById('mRight').value) || 0
+  };
+}
+
+function updatePreview() {
+  const m = getMargins();
+  const page = document.getElementById('previewPage');
+  const crop = document.getElementById('previewCrop');
+  page.style.aspectRatio = pageSize.width + ' / ' + pageSize.height;
+  crop.style.top = m.top + '%';
+  crop.style.bottom = m.bottom + '%';
+  crop.style.left = m.left + '%';
+  crop.style.right = m.right + '%';
+}
+
+async function cropPdf() {
+  if (!pdfBytes) { showToast('Upload a PDF first'); return; }
+  const m = getMargins();
+  if (m.top + m.bottom >= 100 || m.left + m.right >= 100) {
+    showToast('Margins are too large');
+    return;
+  }
+
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.style.color = 'var(--accent2)';
+  out.textContent = 'Processing...';
+
+  try {
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    const pages = doc.getPages();
+    pages.forEach(page => {
+      const { width, height } = page.getSize();
+      const left = width * m.left / 100;
+      const right = width * m.right / 100;
+      const top = height * m.top / 100;
+      const bottom = height * m.bottom / 100;
+      const newW = width - left - right;
+      const newH = height - top - bottom;
+      page.setCropBox(left, bottom, newW, newH);
+      page.setMediaBox(left, bottom, newW, newH);
+    });
+
+    const outBytes = await doc.save();
+    const blob = new Blob([outBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cropped.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    out.textContent = 'Done! ' + pages.length + ' page(s) cropped and downloaded.';
+    showToast('Cropped PDF downloaded');
+  } catch (err) {
+    out.style.color = '#ff6b6b';
+    out.textContent = 'Error: ' + err.message;
+  }
+}
+</script>
+</body></html>
